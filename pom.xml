@@ -9,6 +9,8 @@
     <url>http://www.github.com/jgroups-extras/native-s3-ping</url>
 
     <properties>
+        <jgroups.version>4.0.0.CR2</jgroups.version>
+        <aws.version>1.11.86</aws.version>
         <!-- nexus-staging-maven-plugin -->
         <autoReleaseAfterClose>true</autoReleaseAfterClose>
         <nexus.server.id>jboss-releases-repository</nexus.server.id>
@@ -126,12 +128,12 @@
         <dependency>
             <groupId>org.jgroups</groupId>
             <artifactId>jgroups</artifactId>
-            <version>4.0.+</version>
+            <version>${jgroups.version}</version>
         </dependency>
         <dependency>
             <groupId>com.amazonaws</groupId>
             <artifactId>aws-java-sdk</artifactId>
-            <version>1.11.86</version>
+            <version>${aws.version}</version>
         </dependency>
 
     </dependencies>
