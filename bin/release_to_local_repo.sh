@@ -7,9 +7,9 @@
 
 # Author: Bela Ban
 
-
-DIST=../dist
-POM=../pom.xml
+DIR=`dirname $0`
+DIST=$DIR/../dist/
+POM=$DIR/../pom.xml
 
 JAR=`find $DIST -name "native-*.jar" | grep -v source`
 SRC_JAR=`find $DIST -name "native-*.jar" | grep source`

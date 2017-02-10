@@ -106,6 +106,14 @@
         </jar>
     </target>
 
+    <target name="src.jar" description="Creates the source JAR (no demos, tests)">
+         <mkdir dir="${dist.dir}"/>
+         <jar jarfile="${dist.dir}/native-s3-ping-${version}-sources.jar"
+              basedir="${src.dir}"
+              includes="org/jgroups/aws/**">
+         </jar>
+     </target>
+
 
     <target name="clean"
             description="Removes all class files and ./dist">
