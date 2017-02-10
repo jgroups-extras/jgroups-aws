@@ -4,7 +4,7 @@ Discovery protocol using AWS S3 buckets as cluster information store. Based on t
 Tobias Sarnowski at Zalando [1,2], and ported to JGroups 4.x by Bela Ban in 2017.
 
 To use it, include the following dependencies:
-* `module: org.jgroups.aws` / `artifactId: native-s3-ping` / `version: 1.0.0-SNAPSHOT` (or higher)
+* `module: org.jgroups.aws.s3` / `artifactId: native-s3-ping` / `version: 1.0.0-SNAPSHOT` (or higher)
 
 Native means, it uses the AWS SDK [3] and does not implement the HTTP protocol on its own. The benefit is a more stable
 connection as well as usage of IAM server profiles and AWS standardized credential distribution.
@@ -24,10 +24,9 @@ Like the original `S3_PING`, this library implement a JGroups discovery protocol
 `MPING` or `TCPPING`.
 
 ```xml
-<org.jgroups.aws.NATIVE_S3_PING
+<org.jgroups.aws.s3.NATIVE_S3_PING
         regionName="us-east-1a"
-        bucketName="jgroups-s3-test"
-        bucketPrefix="jgroups"/>
+        bucketName="jgroups-s3-test" />
 ```
 
 `NATIVE_S3_PING` automatically registers itself to JGroups with the magic number 789. You can overwrite this by
@@ -41,13 +40,13 @@ setting the system property `s3ping.magic_number` to different number:
 * **bucketName**: the S3 bucket to store the files in
 * **bucketPrefix** (optional): if you don't want the plugin to pollute your S3 bucket, you can configure a prefix like
   "jgroups/"
-* **endpoint** (optional): you can override the S3 endpoint if yuo know what you are doing
+* **endpoint** (optional): you can override the S3 endpoint if you know what you are doing
 
 ## Example Configuration
 
 ```xml
 <!--
-Based on tcp.xml but with new S3_NATIVE_PING.
+Based on tcp.xml but with new NATIVE_S3_PING.
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xmlns="urn:org:jgroups"
@@ -90,5 +89,7 @@ Based on tcp.xml but with new S3_NATIVE_PING.
 
 
 [1] https://libraries.io/github/zalando/jgroups-native-s3-ping
+
 [2] https://github.com/jwegne/jgroups-native-s3-ping
+
 [3] http://docs.aws.amazon.com/AmazonS3/latest/dev/UsingTheMPDotJavaAPI.html
