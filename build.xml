@@ -98,7 +98,7 @@
 
         <jar destfile="${dist.dir}/native-s3-ping-${version}.jar"
              basedir="${compile.dir}"
-             includes="org/jgroups/s3/**">
+             includes="org/jgroups/aws/**">
             <fileset dir="${root.dir}">
                 <include name="LICENSE"/>
                 <include name="README.md"/>

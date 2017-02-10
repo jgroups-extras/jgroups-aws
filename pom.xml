@@ -1,7 +1,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>org.jgroups.native-s3-ping</groupId>
+    <groupId>org.jgroups.aws.s3</groupId>
     <artifactId>native-s3-ping</artifactId>
     <packaging>bundle</packaging>
     <name>native-s3-ping</name>
@@ -27,6 +27,12 @@
     </organization>
 
     <developers>
+        <developer>
+            <name>Tobias Sarnowski</name>
+            <email>tobias.sarnowski@zalando.de</email>
+            <organization>Zalando SE</organization>
+            <organizationUrl>http://tech.zalando.com/</organizationUrl>
+        </developer>
         <developer>
             <name>Bela Ban</name>
             <email>belaban@yahoo.com</email>
