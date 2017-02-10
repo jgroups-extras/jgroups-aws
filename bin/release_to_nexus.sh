@@ -13,8 +13,8 @@
 # DIST=../dist
 POM=`dirname $0`/../pom.xml
 
-# JAR=`find $DIST -name "jgroups-*.jar" | grep -v source`
-# SRC_JAR=`find $DIST -name "jgroups-*.jar" | grep source`
+# JAR=`find $DIST -name "native-*.jar" | grep -v source`
+# SRC_JAR=`find $DIST -name "native-*.jar" | grep source`
 
 ## Release directly, skipping the staging repo
 ## REPO=https://repository.jboss.org/nexus/content/repositories/releases/

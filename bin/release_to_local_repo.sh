@@ -1,7 +1,7 @@
 #!/bin/bash
 
 
-# Uploads the artifacts in ./dist (JAR and src JAR) to the local repo ($HOME/.ms/jboss-repository)
+# Uploads the artifacts in ./dist (JAR and src JAR) to the local repo ($HOME/.m2/jboss-repository)
 # so we can do local testing before uploading to the Nexus maven repo
 
 
@@ -11,8 +11,8 @@
 DIST=../dist
 POM=../pom.xml
 
-JAR=`find $DIST -name "jgroups-*.jar" | grep -v source`
-SRC_JAR=`find $DIST -name "jgroups-*.jar" | grep source`
+JAR=`find $DIST -name "native-*.jar" | grep -v source`
+SRC_JAR=`find $DIST -name "native-*.jar" | grep source`
 
 REPO=file:$HOME/.m2/jboss-repository
 FLAGS="-Dpackaging=jar -DrepositoryId=jboss-releases-repository"
