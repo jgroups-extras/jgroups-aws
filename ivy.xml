@@ -3,7 +3,7 @@
             xsi:noNamespaceSchemaLocation="http://ant.apache.org/ivy/schemas/ivy.xsd">
     <info organisation="org.jgroups.aws.s3"
           module="native-s3-ping"
-          revision="1.0.0-SNAPSHOT"/>
+          revision="0.9.0.Final"/>
 
     <dependencies>
         <dependency org="org.jgroups"   name="jgroups"          rev="4.0.+"/>
