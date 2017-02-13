@@ -46,6 +46,9 @@ public class NATIVE_S3_PING extends FILE_PING {
     @Property(description="The S3 bucket prefix to use (optional e.g. 'jgroups/').", exposeAsManagedAttribute=false)
     protected String   bucket_prefix;
 
+    @Property(description="Checks if the bucket exists in S3 and creates a new one if missing")
+    protected boolean  check_if_bucket_exists=true;
+
     protected AmazonS3 s3;
 
     static {
@@ -79,6 +82,17 @@ public class NATIVE_S3_PING extends FILE_PING {
         }
         s3=builder.build();
         log.info("using Amazon S3 ping in region %s with bucket '%s' and prefix '%s'", region_name, bucket_name, bucket_prefix);
+
+        if(!check_if_bucket_exists)
+            return;
+        boolean bucket_exists=s3.doesBucketExist(bucket_name);
+        if(!bucket_exists) {
+            log.info("bucket %s does not exist, creating it\n", bucket_name);
+            s3.createBucket(bucket_name);
+            log.info("created bucket %s\n", bucket_name);
+        }
+        else
+            log.info("found bucket %s\n", bucket_name);
     }
 
     @Override
