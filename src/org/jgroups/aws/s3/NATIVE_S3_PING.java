@@ -38,13 +38,13 @@ public class NATIVE_S3_PING extends FILE_PING {
     protected String   endpoint;
 
     @Property(description="The S3 region to use.", exposeAsManagedAttribute=false)
-    protected String   regionName;
+    protected String   region_name;
 
     @Property(description="The S3 bucket to use.", exposeAsManagedAttribute=false)
-    protected String   bucketName;
+    protected String   bucket_name;
 
     @Property(description="The S3 bucket prefix to use (optional e.g. 'jgroups/').", exposeAsManagedAttribute=false)
-    protected String   bucketPrefix;
+    protected String   bucket_prefix;
 
     protected AmazonS3 s3;
 
@@ -66,19 +66,19 @@ public class NATIVE_S3_PING extends FILE_PING {
     public void init() throws Exception {
         super.init();
 
-        if(bucketPrefix == null || bucketPrefix.equals("/"))
-            bucketPrefix="";
-        else if(!bucketPrefix.endsWith("/") && !bucketPrefix.isEmpty())
-            bucketPrefix=bucketPrefix + "/";
+        if(bucket_prefix == null || bucket_prefix.equals("/"))
+            bucket_prefix="";
+        else if(!bucket_prefix.endsWith("/") && !bucket_prefix.isEmpty())
+            bucket_prefix=bucket_prefix + "/";
 
         DefaultAWSCredentialsProviderChain creds=DefaultAWSCredentialsProviderChain.getInstance();
-        AmazonS3ClientBuilder builder=AmazonS3ClientBuilder.standard().withCredentials(creds).withRegion(regionName);
+        AmazonS3ClientBuilder builder=AmazonS3ClientBuilder.standard().withCredentials(creds).withRegion(region_name);
         if(endpoint != null) {
-            builder=builder.withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration(endpoint, regionName));
+            builder=builder.withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration(endpoint, region_name));
             log.info("set Amazon S3 endpoint to %s", endpoint);
         }
         s3=builder.build();
-        log.info("using Amazon S3 ping in region %s with bucket '%s' and prefix '%s'", regionName, bucketName, bucketPrefix);
+        log.info("using Amazon S3 ping in region %s with bucket '%s' and prefix '%s'", region_name, bucket_name, bucket_prefix);
     }
 
     @Override
@@ -87,7 +87,7 @@ public class NATIVE_S3_PING extends FILE_PING {
     }
 
     protected String getClusterPrefix(final String clusterName) {
-        return bucketPrefix + clusterName + "/";
+        return bucket_prefix + clusterName + "/";
     }
 
     @Override
@@ -103,7 +103,7 @@ public class NATIVE_S3_PING extends FILE_PING {
         try {
             final ObjectListing objectListing=s3.listObjects(
               new ListObjectsRequest()
-                .withBucketName(bucketName)
+                .withBucketName(bucket_name)
                 .withPrefix(clusterPrefix));
 
             if(log.isTraceEnabled())
@@ -172,7 +172,7 @@ public class NATIVE_S3_PING extends FILE_PING {
             if(log.isTraceEnabled())
                 log.trace("new S3 file content (%d bytes): %s", data.length, new String(data));
 
-            s3.putObject(new PutObjectRequest(bucketName, key, inStream, objectMetadata));
+            s3.putObject(new PutObjectRequest(bucket_name, key, inStream, objectMetadata));
             log.debug("wrote member list to Amazon S3 [%s -> %s]", key, list);
         }
         catch(final Exception e) {
@@ -187,7 +187,7 @@ public class NATIVE_S3_PING extends FILE_PING {
         String filename=addressToFilename(addr);
         String key=getClusterPrefix(clustername) + filename;
         try {
-            s3.deleteObject(new DeleteObjectRequest(bucketName, key));
+            s3.deleteObject(new DeleteObjectRequest(bucket_name, key));
             if(log.isTraceEnabled())
                 log.trace("removing " + key);
         }
@@ -206,7 +206,7 @@ public class NATIVE_S3_PING extends FILE_PING {
         try {
             final ObjectListing objectListing=s3.listObjects(
               new ListObjectsRequest()
-                .withBucketName(bucketName)
+                .withBucketName(bucket_name)
                 .withPrefix(clusterPrefix));
 
             if(log.isTraceEnabled())
@@ -216,7 +216,7 @@ public class NATIVE_S3_PING extends FILE_PING {
                 if(log.isTraceEnabled())
                     log.trace("fetching data for object %s ...", summary.getKey());
                 try {
-                    s3.deleteObject(new DeleteObjectRequest(bucketName, summary.getKey()));
+                    s3.deleteObject(new DeleteObjectRequest(bucket_name, summary.getKey()));
                     if(log.isTraceEnabled())
                         log.trace("removing %s/%s", summary.getKey());
                 }

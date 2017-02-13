@@ -6,7 +6,7 @@
         Ant/ivy based build.xml
     </description>
 
-    <property name="version"          value="0.9.1.Final"/>
+    <property name="version"          value="0.9.2.Final"/>
     <property name="root.dir"         value="${basedir}"/>
     <property name="src.dir"          value="${root.dir}/src"/>
     <property name="compile.dir"      value="${root.dir}/classes"/>
