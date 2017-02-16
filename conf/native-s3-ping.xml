@@ -4,7 +4,9 @@ Based on tcp.xml but with new S3_PING.
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xmlns="urn:org:jgroups"
         xsi:schemaLocation="urn:org:jgroups http://www.jgroups.org/schema/jgroups.xsd">
-    <TCP bind_port="7800"
+    <TCP
+         bind_addr="match-interface:eth0,site_local"
+         bind_port="7800"
          recv_buf_size="${tcp.recv_buf_size:5M}"
          send_buf_size="${tcp.send_buf_size:5M}"
          max_bundle_size="64K"
