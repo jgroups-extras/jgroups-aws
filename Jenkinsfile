@@ -14,7 +14,7 @@ pipeline {
                 script {
                     def mvnHome = tool 'Maven'
                     sh "${mvnHome}/bin/mvn clean install -Dmaven.test.failure.ignore=true"
-                    junit '**/target/*-reports/*.xml'
+                    junit allowEmptyResults: true, testResults: '**/target/*-reports/*.xml'
                 }
             }
         }
