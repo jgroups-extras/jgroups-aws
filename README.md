@@ -25,8 +25,8 @@ Like the original `S3_PING`, this library implement a JGroups discovery protocol
 
 ```xml
 <org.jgroups.aws.s3.NATIVE_S3_PING
-        regionName="us-east-1a"
-        bucketName="jgroups-s3-test" />
+        region_name="us-east-1a"
+        bucket_name="jgroups-s3-test" />
 ```
 
 `NATIVE_S3_PING` automatically registers itself to JGroups with the magic number 789. You can overwrite this by
@@ -36,9 +36,9 @@ setting the system property `s3ping.magic_number` to different number:
 
 ## Possible Configurations
 
-* **regionName**: like "eu-west-1", "us-east-1", etc.
-* **bucketName**: the S3 bucket to store the files in
-* **bucketPrefix** (optional): if you don't want the plugin to pollute your S3 bucket, you can configure a prefix like
+* **region_name**: like "eu-west-1", "us-east-1", etc.
+* **bucket_name**: the S3 bucket to store the files in
+* **bucket_prefix** (optional): if you don't want the plugin to pollute your S3 bucket, you can configure a prefix like
   "jgroups/"
 * **endpoint** (optional): you can override the S3 endpoint if you know what you are doing
 
@@ -61,9 +61,9 @@ Based on tcp.xml but with new NATIVE_S3_PING.
          thread_pool.keep_alive_time="5000"/>
 
     <org.jgroups.aws.s3.NATIVE_S3_PING
-            regionName="eu-west-1"
-            bucketName="jgroups-s3-test"
-            bucketPrefix="jgroups"/>
+            region_name="eu-west-1"
+            bucket_name="jgroups-s3-test"
+            bucket_prefix="jgroups"/>
 
     <MERGE3 min_interval="10000"
             max_interval="30000"/>
