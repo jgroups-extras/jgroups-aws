@@ -10,7 +10,7 @@
 
     <properties>
         <jgroups.version>4.0.2.Final</jgroups.version>
-        <aws.version>1.11.86</aws.version>
+        <aws.version>1.11.368</aws.version>
         <!-- nexus-staging-maven-plugin -->
         <autoReleaseAfterClose>true</autoReleaseAfterClose>
         <nexus.server.id>jboss-releases-repository</nexus.server.id>
@@ -135,6 +135,25 @@
             <artifactId>aws-java-sdk-s3</artifactId>
             <version>${aws.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.amazonaws</groupId>
+            <artifactId>aws-java-sdk-ec2</artifactId>
+            <version>${aws.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.amazonaws</groupId>
+                    <artifactId>aws-java-sdk-elasticloadbalancing</artifactId>
+                    <version>${aws.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.amazonaws</groupId>
+            <artifactId>aws-java-sdk</artifactId>
+            <version>${aws.version}</version>
+        </dependency>
+
 
     </dependencies>
     <build>
