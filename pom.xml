@@ -5,11 +5,11 @@
     <artifactId>native-s3-ping</artifactId>
     <packaging>bundle</packaging>
     <name>native-s3-ping</name>
-    <version>0.9.4-SNAPSHOT</version>
+    <version>0.9.4.Final</version>
     <url>http://www.github.com/jgroups-extras/native-s3-ping</url>
 
     <properties>
-        <jgroups.version>4.0.2.Final</jgroups.version>
+        <jgroups.version>4.0.19.Final</jgroups.version>
         <aws.version>1.11.368</aws.version>
         <!-- nexus-staging-maven-plugin -->
         <autoReleaseAfterClose>true</autoReleaseAfterClose>
