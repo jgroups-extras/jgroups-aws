@@ -85,7 +85,7 @@ public class NATIVE_S3_PING extends FILE_PING {
 
         if(!check_if_bucket_exists)
             return;
-        boolean bucket_exists=s3.doesBucketExist(bucket_name);
+        boolean bucket_exists=s3.doesBucketExistV2(bucket_name);
         if(!bucket_exists) {
             log.info("bucket %s does not exist, creating it\n", bucket_name);
             s3.createBucket(bucket_name);
