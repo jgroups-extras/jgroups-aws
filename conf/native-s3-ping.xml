@@ -9,7 +9,6 @@ Based on tcp.xml but with new S3_PING.
          bind_port="7800"
          recv_buf_size="${tcp.recv_buf_size:5M}"
          send_buf_size="${tcp.send_buf_size:5M}"
-         max_bundle_size="64K"
          thread_pool.enabled="true"
          thread_pool.min_threads="0"
          thread_pool.max_threads="50"
