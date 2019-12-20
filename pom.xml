@@ -10,7 +10,7 @@
 
     <properties>
         <jgroups.version>4.1.8.Final</jgroups.version>
-        <aws.version>1.11.696</aws.version>
+        <aws.version>1.11.697</aws.version>
         <!-- nexus-staging-maven-plugin -->
         <autoReleaseAfterClose>true</autoReleaseAfterClose>
         <nexus.server.id>jboss-releases-repository</nexus.server.id>
