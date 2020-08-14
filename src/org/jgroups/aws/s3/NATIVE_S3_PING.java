@@ -62,7 +62,7 @@ public class NATIVE_S3_PING extends FILE_PING {
                                                                + " to short. Using default magic number " + JGROUPS_PROTOCOL_DEFAULT_MAGIC_NUMBER);
             }
         }
-        registerProtocolWithJGroups(magicNumber);
+        ClassConfigurator.addProtocol(magicNumber, NATIVE_S3_PING.class);
     }
 
     @Override
@@ -244,7 +244,4 @@ public class NATIVE_S3_PING extends FILE_PING {
         }
     }
 
-    public static void registerProtocolWithJGroups(short magicNumber) {
-        ClassConfigurator.addProtocol(magicNumber, NATIVE_S3_PING.class);
-    }
 }
