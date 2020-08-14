@@ -1,11 +1,10 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.jgroups.aws.s3</groupId>
     <artifactId>native-s3-ping</artifactId>
     <packaging>bundle</packaging>
     <name>native-s3-ping</name>
-    <version>0.9.7-SNAPSHOT</version>
+    <version>1.0.0.Final</version>
     <url>http://www.github.com/jgroups-extras/native-s3-ping</url>
 
     <properties>
@@ -52,7 +51,8 @@
         <connection>scm:git:git://github.com/jgroups-extras/native-s3-ping.git</connection>
         <developerConnection>scm:git:ssh://git@github.com/jgroups-extras/native-s3-ping.git</developerConnection>
         <url>https://github.com/belaban/JGroups</url>
-    </scm>
+      <tag>native-s3-ping-1.0.0.Final</tag>
+  </scm>
 
     <issueManagement>
         <system>jira</system>
@@ -237,33 +237,6 @@
                  </execution>
               </executions>
            </plugin>
-           <plugin>
-                <artifactId>maven-antrun-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>compile</id>
-                        <phase>compile</phase>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                        <configuration>
-                            <tasks>
-                                <property name="compile_classpath" refid="maven.compile.classpath"/>
-                                <property name="plugin_classpath" refid="maven.plugin.classpath"/>
-                                <delete dir="${project.build.directory}/schema" failonerror="false"/>
-                                <mkdir dir="${project.build.directory}/schema"/>
-                                <java classname="org.jgroups.util.XMLSchemaGenerator">
-                                    <classpath>
-                                        <pathelement path="${compile_classpath}"/>
-                                        <pathelement path="${plugin_classpath}"/>
-                                    </classpath>
-                                    <arg line="-o ${project.build.directory}/schema"/>
-                                </java>
-                            </tasks>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
             <!-- Make sure we generate src jars too -->
             <plugin>
                <groupId>org.apache.maven.plugins</groupId>
