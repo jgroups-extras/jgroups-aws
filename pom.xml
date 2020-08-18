@@ -8,7 +8,7 @@
     <url>http://www.github.com/jgroups-extras/native-s3-ping</url>
 
     <properties>
-        <jgroups.version>5.0.1.Final</jgroups.version>
+        <jgroups.version>5.0.2.Final</jgroups.version>
         <aws.version>1.11.708</aws.version>
         <!-- nexus-staging-maven-plugin -->
         <autoReleaseAfterClose>true</autoReleaseAfterClose>
