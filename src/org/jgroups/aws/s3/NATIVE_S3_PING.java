@@ -200,10 +200,12 @@ public class NATIVE_S3_PING extends FILE_PING {
             if(log.isTraceEnabled())
                 log.trace("new S3 file content (%d bytes): %s", data.length, new String(data));
 
-            s3.putObject(new PutObjectRequest(bucket_name, key, inStream, objectMetadata));
-            if (acl_grant_bucket_owner_full_control) {
-                s3.setBucketAcl(bucket_name, BUCKET_OWNER_FULL_CONTROL_ACL);
-            }
+            final PutObjectRequest putRequest =
+                acl_grant_bucket_owner_full_control
+                    ? new PutObjectRequest(bucket_name, key, inStream, objectMetadata)
+                        .withAccessControlList(BUCKET_OWNER_FULL_CONTROL_ACL)
+                    : new PutObjectRequest(bucket_name, key, inStream, objectMetadata);
+            s3.putObject(putRequest);
             log.debug("wrote member list to Amazon S3 [%s -> %s]", key, list);
         }
         catch(final Exception e) {
