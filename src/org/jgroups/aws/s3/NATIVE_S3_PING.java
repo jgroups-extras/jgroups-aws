@@ -34,6 +34,9 @@ public class NATIVE_S3_PING extends FILE_PING {
     protected static final String SERIALIZED_CONTENT_TYPE="text/plain";
     protected static final String MAGIC_NUMBER_SYSTEM_PROPERTY="s3ping.magic_number";
 
+    protected static final String ACL_BUCKET_OWNER_FULL_CONTROL_PROPERTY = "s3ping.acl_bucket_owner_full_control";
+    protected static final AccessControlList BUCKET_OWNER_FULL_CONTROL_ACL = new AccessControlList();
+
     @Property(description="The S3 endpoint to use (optional).", exposeAsManagedAttribute=false)
     protected String   endpoint;
 
@@ -93,6 +96,14 @@ public class NATIVE_S3_PING extends FILE_PING {
         }
         else
             log.info("found bucket %s\n", bucket_name);
+
+        // Initialize the bucket owner full control grant.
+        BUCKET_OWNER_FULL_CONTROL_ACL.grantAllPermissions(new Grant[] {
+            new Grant(
+                new CanonicalGrantee(s3.getS3AccountOwner().getId()),
+                Permission.FullControl
+            )
+        });
     }
 
     @Override
@@ -187,6 +198,9 @@ public class NATIVE_S3_PING extends FILE_PING {
                 log.trace("new S3 file content (%d bytes): %s", data.length, new String(data));
 
             s3.putObject(new PutObjectRequest(bucket_name, key, inStream, objectMetadata));
+            if (Boolean.getBoolean(ACL_BUCKET_OWNER_FULL_CONTROL_PROPERTY)) {
+                s3.setBucketAcl(bucket_name, BUCKET_OWNER_FULL_CONTROL_ACL);
+            }
             log.debug("wrote member list to Amazon S3 [%s -> %s]", key, list);
         }
         catch(final Exception e) {
