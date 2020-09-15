@@ -34,7 +34,6 @@ public class NATIVE_S3_PING extends FILE_PING {
     protected static final String SERIALIZED_CONTENT_TYPE="text/plain";
     protected static final String MAGIC_NUMBER_SYSTEM_PROPERTY="s3ping.magic_number";
 
-    protected static final String ACL_BUCKET_OWNER_FULL_CONTROL_PROPERTY = "s3ping.acl_bucket_owner_full_control";
     protected static final AccessControlList BUCKET_OWNER_FULL_CONTROL_ACL = new AccessControlList();
 
     @Property(description="The S3 endpoint to use (optional).", exposeAsManagedAttribute=false)
@@ -51,6 +50,10 @@ public class NATIVE_S3_PING extends FILE_PING {
 
     @Property(description="Checks if the bucket exists in S3 and creates a new one if missing")
     protected boolean  check_if_bucket_exists=true;
+
+    @Property(description = "Flag indicating whether or not to grant the bucket owner full control over the bucket  " +
+        "on each update. This is useful in multi-region deployments where each region exists in its own AWS account.")
+    protected boolean acl_grant_bucket_owner_full_control = false;
 
     protected AmazonS3 s3;
 
@@ -198,7 +201,7 @@ public class NATIVE_S3_PING extends FILE_PING {
                 log.trace("new S3 file content (%d bytes): %s", data.length, new String(data));
 
             s3.putObject(new PutObjectRequest(bucket_name, key, inStream, objectMetadata));
-            if (Boolean.getBoolean(ACL_BUCKET_OWNER_FULL_CONTROL_PROPERTY)) {
+            if (acl_grant_bucket_owner_full_control) {
                 s3.setBucketAcl(bucket_name, BUCKET_OWNER_FULL_CONTROL_ACL);
             }
             log.debug("wrote member list to Amazon S3 [%s -> %s]", key, list);
