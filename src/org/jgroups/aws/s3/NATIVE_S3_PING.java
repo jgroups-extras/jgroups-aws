@@ -36,6 +36,9 @@ public class NATIVE_S3_PING extends FILE_PING {
 
     protected static final AccessControlList BUCKET_OWNER_FULL_CONTROL_ACL = new AccessControlList();
 
+    @Property(description="The S3 path-style enable (optional).", exposeAsManagedAttribute=false)
+    protected boolean  path_style_access_enabled=false;
+
     @Property(description="The S3 endpoint to use (optional).", exposeAsManagedAttribute=false)
     protected String   endpoint;
 
@@ -81,10 +84,12 @@ public class NATIVE_S3_PING extends FILE_PING {
             bucket_prefix=bucket_prefix + "/";
 
         DefaultAWSCredentialsProviderChain creds=DefaultAWSCredentialsProviderChain.getInstance();
-        AmazonS3ClientBuilder builder=AmazonS3ClientBuilder.standard().withCredentials(creds).withRegion(region_name);
+        AmazonS3ClientBuilder builder=AmazonS3ClientBuilder.standard().withCredentials(creds).withPathStyleAccessEnabled(path_style_access_enabled);
         if(endpoint != null) {
             builder=builder.withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration(endpoint, region_name));
             log.info("set Amazon S3 endpoint to %s", endpoint);
+        } else {
+            builder.withRegion(region_name);
         }
         s3=builder.build();
         log.info("using Amazon S3 ping in region %s with bucket '%s' and prefix '%s'", region_name, bucket_name, bucket_prefix);
