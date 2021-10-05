@@ -192,8 +192,8 @@
                 <configuration>
                     <rules>
                         <requireJavaVersion>
-                            <!-- require Java 8 or higher -->
-                            <version>[1.8,)</version>
+                            <!-- Require Java 11 or higher -->
+                            <version>[11,)</version>
                         </requireJavaVersion>
                         <requireMavenVersion>
                             <version>3.0.4</version>
