@@ -8,6 +8,7 @@
     <url>http://www.github.com/jgroups-extras/native-s3-ping</url>
 
     <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <jgroups.version>5.1.9.Final</jgroups.version>
         <aws.version>1.12.21</aws.version>
         <!-- nexus-staging-maven-plugin -->
@@ -70,10 +71,6 @@
             <url>${nexus.snapshot.server.url}</url>
         </snapshotRepository>
     </distributionManagement>
-
-    <prerequisites>
-        <maven>3.0.4</maven>
-    </prerequisites>
 
     <repositories>
         <repository>
@@ -192,8 +189,8 @@
                 <configuration>
                     <rules>
                         <requireJavaVersion>
-                            <!-- require Java 8 or higher -->
-                            <version>[1.8,)</version>
+                            <!-- Require Java 11 or higher -->
+                            <version>[11,)</version>
                         </requireJavaVersion>
                         <requireMavenVersion>
                             <version>3.0.4</version>
