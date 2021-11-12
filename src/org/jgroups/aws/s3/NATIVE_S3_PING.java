@@ -85,7 +85,7 @@ public class NATIVE_S3_PING extends FILE_PING {
 
         DefaultAWSCredentialsProviderChain creds=DefaultAWSCredentialsProviderChain.getInstance();
         AmazonS3ClientBuilder builder=AmazonS3ClientBuilder.standard().withCredentials(creds).withPathStyleAccessEnabled(path_style_access_enabled);
-        if(endpoint != null) {
+        if(!StringUtils.isNullOrEmpty(endpoint)) {
             builder=builder.withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration(endpoint, region_name));
             log.info("set Amazon S3 endpoint to %s", endpoint);
         } else {
