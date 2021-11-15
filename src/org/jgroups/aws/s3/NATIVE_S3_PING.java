@@ -85,7 +85,7 @@ public class NATIVE_S3_PING extends FILE_PING {
 
         DefaultAWSCredentialsProviderChain creds=DefaultAWSCredentialsProviderChain.getInstance();
         AmazonS3ClientBuilder builder=AmazonS3ClientBuilder.standard().withCredentials(creds).withPathStyleAccessEnabled(path_style_access_enabled);
-        if(endpoint != null) {
+        if(!StringUtils.isNullOrEmpty(endpoint)) {
             builder=builder.withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration(endpoint, region_name));
             log.info("set Amazon S3 endpoint to %s", endpoint);
         } else {
@@ -106,12 +106,14 @@ public class NATIVE_S3_PING extends FILE_PING {
             log.info("found bucket %s\n", bucket_name);
 
         // Initialize the bucket owner full control grant.
-        BUCKET_OWNER_FULL_CONTROL_ACL.grantAllPermissions(new Grant[] {
-            new Grant(
-                new CanonicalGrantee(s3.getS3AccountOwner().getId()),
-                Permission.FullControl
-            )
-        });
+        if (acl_grant_bucket_owner_full_control) {
+            BUCKET_OWNER_FULL_CONTROL_ACL.grantAllPermissions(new Grant[]{
+                    new Grant(
+                            new CanonicalGrantee(s3.getS3AccountOwner().getId()),
+                            Permission.FullControl
+                    )
+            });
+        }
     }
 
     @Override
