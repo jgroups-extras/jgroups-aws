@@ -107,12 +107,10 @@ public class NATIVE_S3_PING extends FILE_PING {
 
         // Initialize the bucket owner full control grant.
         if (acl_grant_bucket_owner_full_control) {
-            BUCKET_OWNER_FULL_CONTROL_ACL.grantAllPermissions(new Grant[]{
-                    new Grant(
-                            new CanonicalGrantee(s3.getS3AccountOwner().getId()),
-                            Permission.FullControl
-                    )
-            });
+            BUCKET_OWNER_FULL_CONTROL_ACL.grantAllPermissions(new Grant(
+                    new CanonicalGrantee(s3.getS3AccountOwner().getId()),
+                    Permission.FullControl
+            ));
         }
     }
 
