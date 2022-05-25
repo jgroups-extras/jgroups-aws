@@ -1,4 +1,4 @@
-# NATIVE_S3_PING
+# JGroups AWS - S3_PING
 
 Discovery protocol using AWS S3 buckets as cluster information store. Based on the original code written by
 Tobias Sarnowski at Zalando [1,2], and ported to JGroups 4.x by Bela Ban in 2017.
@@ -24,12 +24,12 @@ Like the original `S3_PING`, this library implement a JGroups discovery protocol
 `MPING` or `TCPPING`.
 
 ```xml
-<org.jgroups.aws.s3.NATIVE_S3_PING
+<aws.S3_PING
         region_name="us-east-1a"
         bucket_name="jgroups-s3-test" />
 ```
 
-`NATIVE_S3_PING` automatically registers itself to JGroups with the magic number 789. You can overwrite this by
+`aws.S3_PING` automatically registers itself to JGroups with the magic number 789. You can overwrite this by
 setting the system property `s3ping.magic_number` to different number:
 
 `-Ds3ping.magic_number=123`
@@ -46,7 +46,7 @@ setting the system property `s3ping.magic_number` to different number:
 
 ```xml
 <!--
-Based on tcp.xml but with new NATIVE_S3_PING.
+Based on tcp.xml but with new aws.S3_PING.
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xmlns="urn:org:jgroups"
@@ -60,7 +60,7 @@ Based on tcp.xml but with new NATIVE_S3_PING.
          thread_pool.max_threads="8"
          thread_pool.keep_alive_time="5000"/>
 
-    <org.jgroups.aws.s3.NATIVE_S3_PING
+    <aws.S3_PING
             region_name="eu-west-1"
             bucket_name="jgroups-s3-test"
             bucket_prefix="jgroups"/>
