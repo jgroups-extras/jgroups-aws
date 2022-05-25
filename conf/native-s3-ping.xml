@@ -14,7 +14,7 @@ Based on tcp.xml but with new S3_PING.
          thread_pool.max_threads="50"
          thread_pool.keep_alive_time="30000" />
 
-    <org.jgroups.aws.s3.NATIVE_S3_PING
+    <aws.S3_PING
             region_name="us-east-1"
             bucket_name="${S3_BUCKET_NAME:mybucket}"/>
 
