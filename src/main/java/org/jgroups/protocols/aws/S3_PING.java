@@ -23,6 +23,7 @@ import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.amazonaws.util.StringUtils;
 import org.jgroups.Address;
 import org.jgroups.annotations.Property;
+import org.jgroups.aws.s3.NATIVE_S3_PING;
 import org.jgroups.conf.ClassConfigurator;
 import org.jgroups.logging.LogFactory;
 import org.jgroups.protocols.FILE_PING;
@@ -31,11 +32,9 @@ import org.jgroups.util.Responses;
 import org.jgroups.util.Util;
 
 /**
- * Created after the original S3_PING from Bela Ban.
- * <p>
  * This implementation uses the AWS SDK in order to be more solid and to benefit from the built-in security features
- * like getting credentials via IAM instance profiles instead of handling this in the application.<br/>
- * Ported to use JGroups 4.x by Bela Ban in 2017.
+ * like getting credentials via IAM instance profiles instead of handling this in the application.
+ *
  * @author Tobias Sarnowski
  * @author Bela Ban
  */
@@ -82,7 +81,8 @@ public class S3_PING extends FILE_PING {
                                                                + " to short. Using default magic number " + JGROUPS_PROTOCOL_DEFAULT_MAGIC_NUMBER);
             }
         }
-        ClassConfigurator.addProtocol(magicNumber, S3_PING.class);
+        ClassConfigurator.addProtocol(magicNumber, NATIVE_S3_PING.class);
+        ClassConfigurator.addProtocol(++magicNumber, S3_PING.class);
     }
 
     @Override
