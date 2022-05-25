@@ -1,11 +1,11 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>org.jgroups.aws.s3</groupId>
-    <artifactId>native-s3-ping</artifactId>
-    <packaging>bundle</packaging>
-    <name>native-s3-ping</name>
+    <groupId>org.jgroups.aws</groupId>
+    <artifactId>jgroups-aws</artifactId>
+    <packaging>jar</packaging>
+    <name>JGroups - AWS</name>
     <version>1.1.0.Final-SNAPSHOT</version>
-    <url>http://www.github.com/jgroups-extras/native-s3-ping</url>
+    <url>http://www.github.com/jgroups-extras/jgroups-aws</url>
 
     <properties>
         <jgroups.version>4.2.4.Final</jgroups.version>
@@ -48,15 +48,15 @@
     </licenses>
 
     <scm>
-        <connection>scm:git:git://github.com/jgroups-extras/native-s3-ping.git</connection>
-        <developerConnection>scm:git:ssh://git@github.com/jgroups-extras/native-s3-ping.git</developerConnection>
+        <connection>scm:git:git://github.com/jgroups-extras/jgroups-aws.git</connection>
+        <developerConnection>scm:git:ssh://git@github.com/jgroups-extras/jgroups-aws.git</developerConnection>
         <url>https://github.com/belaban/JGroups</url>
         <tag>native-s3-ping-1.0.0.Final</tag>
     </scm>
 
     <issueManagement>
         <system>jira</system>
-        <url>https://github.com/jgroups-extras/native-s3-ping/issues</url>
+        <url>https://github.com/jgroups-extras/jgroups-aws/issues</url>
     </issueManagement>
 
     <distributionManagement>
