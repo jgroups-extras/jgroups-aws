@@ -90,7 +90,6 @@
                 <updatePolicy>interval:120</updatePolicy>
             </snapshots>
         </repository>
-
         <repository>
             <id>jboss-releases-repository</id>
             <name>JBoss Public Maven Repository Staging</name>
@@ -105,7 +104,6 @@
                 <updatePolicy>interval:120</updatePolicy>
             </snapshots>
         </repository>
-
         <repository>
             <id>jboss-snapshots-repository</id>
             <name>JBoss Nexus snapshots repository</name>
@@ -120,8 +118,6 @@
                 <updatePolicy>interval:120</updatePolicy>
             </snapshots>
         </repository>
-
-
     </repositories>
 
     <dependencies>
@@ -135,14 +131,13 @@
             <artifactId>aws-java-sdk-core</artifactId>
             <version>${aws.version}</version>
         </dependency>
-
         <dependency>
             <groupId>com.amazonaws</groupId>
             <artifactId>aws-java-sdk-s3</artifactId>
             <version>${aws.version}</version>
         </dependency>
-
     </dependencies>
+
     <build>
         <sourceDirectory>src</sourceDirectory>
         <resources>
@@ -383,31 +378,6 @@
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>build-helper-maven-plugin</artifactId>
                     <version>3.2.0</version>
-                </plugin>
-                <!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
-                <plugin>
-                    <groupId>org.eclipse.m2e</groupId>
-                    <artifactId>lifecycle-mapping</artifactId>
-                    <version>1.0.0</version>
-                    <configuration>
-                        <lifecycleMappingMetadata>
-                            <pluginExecutions>
-                                <pluginExecution>
-                                    <pluginExecutionFilter>
-                                        <groupId>org.apache.maven.plugins</groupId>
-                                        <artifactId>maven-antrun-plugin</artifactId>
-                                        <versionRange>[1.3,)</versionRange>
-                                        <goals>
-                                            <goal>run</goal>
-                                        </goals>
-                                    </pluginExecutionFilter>
-                                    <action>
-                                        <ignore/>
-                                    </action>
-                                </pluginExecution>
-                            </pluginExecutions>
-                        </lifecycleMappingMetadata>
-                    </configuration>
                 </plugin>
             </plugins>
         </pluginManagement>
