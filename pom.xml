@@ -5,7 +5,7 @@
     <packaging>jar</packaging>
     <name>JGroups - AWS</name>
     <version>2.0.1.Final-SNAPSHOT</version>
-    <url>http://www.github.com/jgroups-extras/jgroups-aws</url>
+    <url>https://www.github.com/jgroups-extras/jgroups-aws</url>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -25,7 +25,7 @@
 
     <organization>
         <name>JBoss, a division of Red Hat</name>
-        <url>http://www.jboss.org</url>
+        <url>https://www.jboss.org/</url>
     </organization>
 
     <developers>
@@ -51,12 +51,12 @@
     <scm>
         <connection>scm:git:git://github.com/jgroups-extras/jgroups-aws.git</connection>
         <developerConnection>scm:git:ssh://git@github.com/jgroups-extras/jgroups-aws.git</developerConnection>
-        <url>https://github.com/belaban/JGroups</url>
+        <url>https://github.com/jgroups-extras/jgroups-aws</url>
         <tag>HEAD</tag>
     </scm>
 
     <issueManagement>
-        <system>jira</system>
+        <system>GitHub</system>
         <url>https://github.com/jgroups-extras/jgroups-aws/issues</url>
     </issueManagement>
 
