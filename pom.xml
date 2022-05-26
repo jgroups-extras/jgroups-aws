@@ -1,16 +1,16 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>org.jgroups.aws.s3</groupId>
-    <artifactId>native-s3-ping</artifactId>
+    <groupId>org.jgroups.aws</groupId>
+    <artifactId>jgroups-aws</artifactId>
     <packaging>jar</packaging>
-    <name>native-s3-ping</name>
+    <name>JGroups - AWS</name>
     <version>2.0.1.Final-SNAPSHOT</version>
-    <url>http://www.github.com/jgroups-extras/native-s3-ping</url>
+    <url>http://www.github.com/jgroups-extras/jgroups-aws</url>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <jgroups.version>5.2.2.Final</jgroups.version>
-        <aws.version>1.12.21</aws.version>
+        <aws.version>1.12.227</aws.version>
         <!-- nexus-staging-maven-plugin -->
         <autoReleaseAfterClose>true</autoReleaseAfterClose>
         <nexus.server.id>jboss-releases-repository</nexus.server.id>
@@ -49,15 +49,15 @@
     </licenses>
 
     <scm>
-        <connection>scm:git:git://github.com/jgroups-extras/native-s3-ping.git</connection>
-        <developerConnection>scm:git:ssh://git@github.com/jgroups-extras/native-s3-ping.git</developerConnection>
+        <connection>scm:git:git://github.com/jgroups-extras/jgroups-aws.git</connection>
+        <developerConnection>scm:git:ssh://git@github.com/jgroups-extras/jgroups-aws.git</developerConnection>
         <url>https://github.com/belaban/JGroups</url>
         <tag>HEAD</tag>
     </scm>
 
     <issueManagement>
         <system>jira</system>
-        <url>https://github.com/jgroups-extras/native-s3-ping/issues</url>
+        <url>https://github.com/jgroups-extras/jgroups-aws/issues</url>
     </issueManagement>
 
     <distributionManagement>
@@ -133,10 +133,22 @@
             <artifactId>aws-java-sdk-s3</artifactId>
             <version>${aws.version}</version>
         </dependency>
+        <!-- Test dependencies -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.13.2</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <version>3.22.0</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
-        <sourceDirectory>src</sourceDirectory>
         <resources>
             <resource>
                 <directory>${project.basedir}</directory>
@@ -249,19 +261,9 @@
                 <artifactId>maven-jar-plugin</artifactId>
             </plugin>
 
-            <!-- Disable default tests: they won't run since they are lacking configuration -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <configuration>
-                    <skip>true</skip>
-                    <skipTests>true</skipTests>
-                </configuration>
-                <executions>
-                    <execution>
-                        <phase>test</phase>
-                    </execution>
-                </executions>
             </plugin>
         </plugins>
         <pluginManagement>
