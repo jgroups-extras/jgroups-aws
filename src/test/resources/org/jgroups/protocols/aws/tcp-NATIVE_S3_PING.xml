@@ -27,7 +27,7 @@
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xmlns="urn:org:jgroups"
-        xsi:schemaLocation="urn:org:jgroups http://www.jgroups.org/schema/jgroups.xsd">
+        xsi:schemaLocation="urn:org:jgroups http://www.jgroups.org/schema/jgroups-4.2.xsd">
     <TCP bind_addr="${jgroups.bind_addr:site_local}"
          bind_port="${jgroups.bind_port:7800}"
          external_addr="${jgroups.external_addr}"
@@ -35,17 +35,18 @@
          thread_pool.min_threads="0"
          thread_pool.max_threads="200"
          thread_pool.keep_alive_time="30000"
-         diag.enabled="false"/>
+         enable_diagnostics="false"
+    />
     <RED/>
     <org.jgroups.aws.s3.NATIVE_S3_PING region_name="${S3_PING_REGION_NAME:eu-central-1}"
                                        bucket_name="${S3_PING_BUCKET_NAME}"
     />
     <MERGE3 min_interval="10000"
             max_interval="30000"/>
-    <FD_SOCK2/>
+    <FD_SOCK/>
     <FD_ALL3 timeout="40000"
              interval="5000"/>
-    <VERIFY_SUSPECT2 timeout="1500"/>
+    <VERIFY_SUSPECT timeout="1500"/>
     <BARRIER/>
     <pbcast.NAKACK2 use_mcast_xmit="false"/>
     <UNICAST3/>
