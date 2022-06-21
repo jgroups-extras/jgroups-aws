@@ -4,7 +4,7 @@
     <artifactId>native-s3-ping</artifactId>
     <packaging>bundle</packaging>
     <name>native-s3-ping</name>
-    <version>1.0.0.Final</version>
+    <version>1.1.0.Final-SNAPSHOT</version>
     <url>http://www.github.com/jgroups-extras/native-s3-ping</url>
 
     <properties>
