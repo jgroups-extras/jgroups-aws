@@ -10,7 +10,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <jgroups.version>5.2.2.Final</jgroups.version>
-        <aws.version>1.12.243</aws.version>
+        <aws.version>1.12.247</aws.version>
         <!-- nexus-staging-maven-plugin -->
         <autoReleaseAfterClose>true</autoReleaseAfterClose>
         <nexus.server.id>jboss-releases-repository</nexus.server.id>
