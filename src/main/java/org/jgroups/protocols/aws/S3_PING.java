@@ -1,13 +1,25 @@
-package org.jgroups.aws.s3;
+package org.jgroups.protocols.aws;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.util.List;
 
 import com.amazonaws.auth.DefaultAWSCredentialsProviderChain;
 import com.amazonaws.client.builder.AwsClientBuilder;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
-import com.amazonaws.services.s3.model.*;
+import com.amazonaws.services.s3.model.DeleteObjectRequest;
+import com.amazonaws.services.s3.model.GetObjectRequest;
+import com.amazonaws.services.s3.model.ListObjectsRequest;
+import com.amazonaws.services.s3.model.ObjectListing;
+import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.amazonaws.services.s3.model.S3Object;
+import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.amazonaws.util.StringUtils;
 import org.jgroups.Address;
 import org.jgroups.annotations.Property;
+import org.jgroups.aws.s3.NATIVE_S3_PING;
 import org.jgroups.conf.ClassConfigurator;
 import org.jgroups.logging.LogFactory;
 import org.jgroups.protocols.FILE_PING;
@@ -15,20 +27,14 @@ import org.jgroups.protocols.PingData;
 import org.jgroups.util.Responses;
 import org.jgroups.util.Util;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.util.List;
-
 /**
- * Created after the original S3_PING from Bela Ban.
- * <p>
  * This implementation uses the AWS SDK in order to be more solid and to benefit from the built-in security features
- * like getting credentials via IAM instance profiles instead of handling this in the application.<br/>
- * Ported to use JGroups 4.x by Bela Ban in 2017.
+ * like getting credentials via IAM instance profiles instead of handling this in the application.
+ *
  * @author Tobias Sarnowski
  * @author Bela Ban
  */
-public class NATIVE_S3_PING extends FILE_PING {
+public class S3_PING extends FILE_PING {
     protected static final short  JGROUPS_PROTOCOL_DEFAULT_MAGIC_NUMBER=789;
     protected static final int    SERIALIZATION_BUFFER_SIZE=4096;
     protected static final String SERIALIZED_CONTENT_TYPE="text/plain";
@@ -58,11 +64,13 @@ public class NATIVE_S3_PING extends FILE_PING {
                 magicNumber=Short.parseShort(System.getProperty(MAGIC_NUMBER_SYSTEM_PROPERTY));
             }
             catch(NumberFormatException e) {
-                LogFactory.getLog(NATIVE_S3_PING.class).warn("Could not convert " + System.getProperty(MAGIC_NUMBER_SYSTEM_PROPERTY)
+                LogFactory.getLog(S3_PING.class).warn("Could not convert " + System.getProperty(MAGIC_NUMBER_SYSTEM_PROPERTY)
                                                                + " to short. Using default magic number " + JGROUPS_PROTOCOL_DEFAULT_MAGIC_NUMBER);
             }
         }
-        registerProtocolWithJGroups(magicNumber);
+
+        ClassConfigurator.addProtocol(magicNumber, NATIVE_S3_PING.class);
+        ClassConfigurator.addProtocol(++magicNumber, S3_PING.class);
     }
 
     @Override
@@ -244,7 +252,4 @@ public class NATIVE_S3_PING extends FILE_PING {
         }
     }
 
-    public static void registerProtocolWithJGroups(short magicNumber) {
-        ClassConfigurator.addProtocol(magicNumber, NATIVE_S3_PING.class);
-    }
 }

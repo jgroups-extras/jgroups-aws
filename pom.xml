@@ -1,15 +1,16 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>org.jgroups.aws.s3</groupId>
-    <artifactId>native-s3-ping</artifactId>
-    <packaging>bundle</packaging>
-    <name>native-s3-ping</name>
+    <groupId>org.jgroups.aws</groupId>
+    <artifactId>jgroups-aws</artifactId>
+    <packaging>jar</packaging>
+    <name>JGroups - AWS</name>
     <version>1.1.0.Final-SNAPSHOT</version>
-    <url>http://www.github.com/jgroups-extras/native-s3-ping</url>
+    <url>https://www.github.com/jgroups-extras/jgroups-aws</url>
 
     <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <jgroups.version>4.2.4.Final</jgroups.version>
-        <aws.version>1.11.708</aws.version>
+        <aws.version>1.12.243</aws.version>
         <!-- nexus-staging-maven-plugin -->
         <autoReleaseAfterClose>true</autoReleaseAfterClose>
         <nexus.server.id>jboss-releases-repository</nexus.server.id>
@@ -24,7 +25,7 @@
 
     <organization>
         <name>JBoss, a division of Red Hat</name>
-        <url>http://www.jboss.org</url>
+        <url>https://www.jboss.org/</url>
     </organization>
 
     <developers>
@@ -48,15 +49,15 @@
     </licenses>
 
     <scm>
-        <connection>scm:git:git://github.com/jgroups-extras/native-s3-ping.git</connection>
-        <developerConnection>scm:git:ssh://git@github.com/jgroups-extras/native-s3-ping.git</developerConnection>
-        <url>https://github.com/belaban/JGroups</url>
-      <tag>native-s3-ping-1.0.0.Final</tag>
-  </scm>
+        <connection>scm:git:git://github.com/jgroups-extras/jgroups-aws.git</connection>
+        <developerConnection>scm:git:ssh://git@github.com/jgroups-extras/jgroups-aws.git</developerConnection>
+        <url>https://github.com/jgroups-extras/jgroups-aws</url>
+        <tag>HEAD</tag>
+    </scm>
 
     <issueManagement>
-        <system>jira</system>
-        <url>https://github.com/jgroups-extras/native-s3-ping/issues</url>
+        <system>GitHub</system>
+        <url>https://github.com/jgroups-extras/jgroups-aws/issues</url>
     </issueManagement>
 
     <distributionManagement>
@@ -70,10 +71,6 @@
             <url>${nexus.snapshot.server.url}</url>
         </snapshotRepository>
     </distributionManagement>
-
-    <prerequisites>
-        <maven>3.0.4</maven>
-    </prerequisites>
 
     <repositories>
         <repository>
@@ -90,7 +87,6 @@
                 <updatePolicy>interval:120</updatePolicy>
             </snapshots>
         </repository>
-
         <repository>
             <id>jboss-releases-repository</id>
             <name>JBoss Public Maven Repository Staging</name>
@@ -105,7 +101,6 @@
                 <updatePolicy>interval:120</updatePolicy>
             </snapshots>
         </repository>
-
         <repository>
             <id>jboss-snapshots-repository</id>
             <name>JBoss Nexus snapshots repository</name>
@@ -120,8 +115,6 @@
                 <updatePolicy>interval:120</updatePolicy>
             </snapshots>
         </repository>
-
-
     </repositories>
 
     <dependencies>
@@ -135,23 +128,34 @@
             <artifactId>aws-java-sdk-core</artifactId>
             <version>${aws.version}</version>
         </dependency>
-
         <dependency>
             <groupId>com.amazonaws</groupId>
             <artifactId>aws-java-sdk-s3</artifactId>
             <version>${aws.version}</version>
         </dependency>
-
+        <!-- Test dependencies -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.13.2</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <version>3.23.1</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
+
     <build>
-        <sourceDirectory>src</sourceDirectory>
         <resources>
             <resource>
-               <directory>${project.basedir}</directory>
-               <includes>
-                  <include>LICENSE</include>
-                  <include>README</include>
-               </includes>
+                <directory>${project.basedir}</directory>
+                <includes>
+                    <include>LICENSE</include>
+                    <include>README</include>
+                </includes>
             </resource>
         </resources>
         <plugins>
@@ -180,7 +184,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-enforcer-plugin</artifactId>
-                <version>1.4.1</version>
+                <version>3.1.0</version>
                 <executions>
                     <execution>
                         <id>enforce-java</id>
@@ -201,48 +205,48 @@
                     </rules>
                 </configuration>
             </plugin>
-           <plugin>
-              <groupId>org.codehaus.mojo</groupId>
-              <artifactId>build-helper-maven-plugin</artifactId>
-              <executions>
-                 <execution>
-                    <id>add-source</id>
-                    <phase>validate</phase>
-                    <goals>
-                       <goal>add-source</goal>
-                    </goals>
-                    <configuration>
-                       <sources>
-                          <!-- These tests have to go in the main jar -->
-                          <source>tests/other</source>
-                          <source>tests/perf</source>
-                       </sources>
-                    </configuration>
-                 </execution>
-                 <execution>
-                    <id>add-test-source</id>
-                    <phase>validate</phase>
-                    <goals>
-                       <goal>add-test-source</goal>
-                    </goals>
-                    <configuration>
-                       <sources>
-                          <source>tests/byteman</source>
-                          <source>tests/junit</source>
-                          <source>tests/junit-functional</source>
-                          <!-- tests/other and tests/perf are included in the normal sources -->
-                          <source>tests/stress</source>
-                       </sources>
-                    </configuration>
-                 </execution>
-              </executions>
-           </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>add-source</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>add-source</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <!-- These tests have to go in the main jar -->
+                                <source>tests/other</source>
+                                <source>tests/perf</source>
+                            </sources>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>add-test-source</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>add-test-source</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>tests/byteman</source>
+                                <source>tests/junit</source>
+                                <source>tests/junit-functional</source>
+                                <!-- tests/other and tests/perf are included in the normal sources -->
+                                <source>tests/stress</source>
+                            </sources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
             <!-- Make sure we generate src jars too -->
             <plugin>
-               <groupId>org.apache.maven.plugins</groupId>
-               <artifactId>maven-source-plugin</artifactId>
-               <inherited>true</inherited>
-               <executions>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <inherited>true</inherited>
+                <executions>
                     <execution>
                         <id>attach-sources</id>
                         <phase>verify</phase>
@@ -255,11 +259,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
-                <configuration>
-                    <archive>
-                        <manifestFile>conf/manifest.mf</manifestFile>
-                    </archive>
-                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.felix</groupId>
@@ -279,19 +278,9 @@
                 </configuration>
             </plugin>
 
-            <!-- Disable default tests: they won't run since they are lacking configuration -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <configuration>
-                    <skip>true</skip>
-                    <skipTests>true</skipTests>
-                </configuration>
-                <executions>
-                    <execution>
-                        <phase>test</phase>
-                    </execution>
-                </executions>
             </plugin>
         </plugins>
         <pluginManagement>
@@ -300,6 +289,9 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-release-plugin</artifactId>
                     <version>2.5.3</version>
+                    <configuration>
+                        <tagNameFormat>@{project.version}</tagNameFormat>
+                    </configuration>
                 </plugin>
                 <plugin>
                     <groupId>org.sonatype.plugins</groupId>
@@ -309,7 +301,7 @@
                 <plugin>
                     <groupId>org.apache.felix</groupId>
                     <artifactId>maven-bundle-plugin</artifactId>
-                    <version>5.1.1</version>
+                    <version>5.1.6</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -380,31 +372,6 @@
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>build-helper-maven-plugin</artifactId>
                     <version>3.2.0</version>
-                </plugin>
-                <!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
-                <plugin>
-                    <groupId>org.eclipse.m2e</groupId>
-                    <artifactId>lifecycle-mapping</artifactId>
-                    <version>1.0.0</version>
-                    <configuration>
-                        <lifecycleMappingMetadata>
-                            <pluginExecutions>
-                                <pluginExecution>
-                                    <pluginExecutionFilter>
-                                        <groupId>org.apache.maven.plugins</groupId>
-                                        <artifactId>maven-antrun-plugin</artifactId>
-                                        <versionRange>[1.3,)</versionRange>
-                                        <goals>
-                                            <goal>run</goal>
-                                        </goals>
-                                    </pluginExecutionFilter>
-                                    <action>
-                                        <ignore />
-                                    </action>
-                                </pluginExecution>
-                            </pluginExecutions>
-                        </lifecycleMappingMetadata>
-                    </configuration>
                 </plugin>
             </plugins>
         </pluginManagement>
