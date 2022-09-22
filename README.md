@@ -40,6 +40,7 @@ setting the system property `s3ping.magic_number` to different number:
 * **bucket_prefix** (optional): if you don't want the plugin to pollute your S3 bucket, you can configure a prefix like
   "jgroups/"
 * **endpoint** (optional): you can override the S3 endpoint if you know what you are doing
+* **kms_key_id** (optional): you can set this to a kms key id to enable KMS-SSE encryption when writing data to S3 (see https://docs.aws.amazon.com/AmazonS3/latest/userguide/UsingKMSEncryption.html)
 
 ## Example Configuration
 
