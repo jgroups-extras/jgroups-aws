@@ -69,12 +69,12 @@ public class S3_PING extends FILE_PING {
         "on each update. This is useful in multi-region deployments where each region exists in its own AWS account.")
     protected boolean acl_grant_bucket_owner_full_control = false;
 
-    @Property(description="Use kms encryption with s3 with the given kms key (optionally - enables KMS Server side encryption (SSE-KMS) using the given kms key", exposeAsManagedAttribute=false)
+    @Property(description="Use kms encryption with s3 with the given kms key (optionally - enables KMS Server side encryption (SSE-KMS) using the given kms key)", exposeAsManagedAttribute=false)
     protected String  kms_key_id;
 
     protected AmazonS3 s3;
 
-    protected SSEAwsKeyManagementParams encryptionParams = null;
+    protected SSEAwsKeyManagementParams encryptionParams;
 
     static {
         short magicNumber=JGROUPS_PROTOCOL_DEFAULT_MAGIC_NUMBER;
