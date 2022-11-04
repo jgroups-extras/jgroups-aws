@@ -99,6 +99,13 @@ mvn verify
 
 If any of the required properties are not specified tests will be skipped (uses `org.junit.Assume`).
 
+# Reporting Issues
+
+Project JGroups AWS uses GitHub issues:
+
+[https://github.com/jgroups-extras/jgroups-aws/issues](https://github.com/jgroups-extras/jgroups-aws/issues)
+
+# References
 
 [1] https://libraries.io/github/zalando/jgroups-native-s3-ping
 
