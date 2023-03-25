@@ -20,6 +20,7 @@ import com.amazonaws.services.s3.model.Permission;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
+import com.amazonaws.services.s3.model.SSEAwsKeyManagementParams;
 import com.amazonaws.util.StringUtils;
 import org.jgroups.Address;
 import org.jgroups.annotations.Property;
@@ -68,7 +69,12 @@ public class S3_PING extends FILE_PING {
         "on each update. This is useful in multi-region deployments where each region exists in its own AWS account.")
     protected boolean acl_grant_bucket_owner_full_control = false;
 
+    @Property(description="Use kms encryption with s3 with the given kms key (optionally - enables KMS Server side encryption (SSE-KMS) using the given kms key)", exposeAsManagedAttribute=false)
+    protected String  kms_key_id;
+
     protected AmazonS3 s3;
+
+    protected SSEAwsKeyManagementParams encryptionParams;
 
     static {
         short magicNumber=JGROUPS_PROTOCOL_DEFAULT_MAGIC_NUMBER;
@@ -104,6 +110,11 @@ public class S3_PING extends FILE_PING {
         }
         s3=builder.build();
         log.info("using Amazon S3 ping in region %s with bucket '%s' and prefix '%s'", region_name, bucket_name, bucket_prefix);
+
+        if (!StringUtils.isNullOrEmpty(kms_key_id)) {
+            encryptionParams = new SSEAwsKeyManagementParams().withAwsKmsKeyId(kms_key_id);
+            log.info("using S3 client with KMS");
+        }
 
         if(!check_if_bucket_exists)
             return;
@@ -221,7 +232,7 @@ public class S3_PING extends FILE_PING {
                     ? new PutObjectRequest(bucket_name, key, inStream, objectMetadata)
                         .withAccessControlList(BUCKET_OWNER_FULL_CONTROL_ACL)
                     : new PutObjectRequest(bucket_name, key, inStream, objectMetadata);
-            s3.putObject(putRequest);
+            s3.putObject(encryptionParams != null ? putRequest.withSSEAwsKeyManagementParams(encryptionParams) : putRequest);
             log.debug("wrote member list to Amazon S3 [%s -> %s]", key, list);
         }
         catch(final Exception e) {
