@@ -227,12 +227,17 @@ public class S3_PING extends FILE_PING {
             if(log.isTraceEnabled())
                 log.trace("new S3 file content (%d bytes): %s", data.length, new String(data));
 
-            final PutObjectRequest putRequest =
-                acl_grant_bucket_owner_full_control
-                    ? new PutObjectRequest(bucket_name, key, inStream, objectMetadata)
-                        .withAccessControlList(BUCKET_OWNER_FULL_CONTROL_ACL)
-                    : new PutObjectRequest(bucket_name, key, inStream, objectMetadata);
-            s3.putObject(encryptionParams != null ? putRequest.withSSEAwsKeyManagementParams(encryptionParams) : putRequest);
+            PutObjectRequest putRequest = new PutObjectRequest(bucket_name, key, inStream, objectMetadata);
+
+            if (acl_grant_bucket_owner_full_control) {
+                putRequest = putRequest.withAccessControlList(BUCKET_OWNER_FULL_CONTROL_ACL);
+            }
+
+            if (encryptionParams != null) {
+                putRequest = putRequest.withSSEAwsKeyManagementParams(encryptionParams);
+            }
+
+            s3.putObject(putRequest);
             log.debug("wrote member list to Amazon S3 [%s -> %s]", key, list);
         }
         catch(final Exception e) {
