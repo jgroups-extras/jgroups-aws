@@ -1,27 +1,9 @@
 package org.jgroups.protocols.aws;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.net.URI;
 import java.util.List;
 
-import com.amazonaws.auth.DefaultAWSCredentialsProviderChain;
-import com.amazonaws.client.builder.AwsClientBuilder;
-import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.AmazonS3ClientBuilder;
-import com.amazonaws.services.s3.model.AccessControlList;
-import com.amazonaws.services.s3.model.CanonicalGrantee;
-import com.amazonaws.services.s3.model.DeleteObjectRequest;
-import com.amazonaws.services.s3.model.GetObjectRequest;
-import com.amazonaws.services.s3.model.Grant;
-import com.amazonaws.services.s3.model.ListObjectsRequest;
-import com.amazonaws.services.s3.model.ObjectListing;
-import com.amazonaws.services.s3.model.ObjectMetadata;
-import com.amazonaws.services.s3.model.Permission;
-import com.amazonaws.services.s3.model.PutObjectRequest;
-import com.amazonaws.services.s3.model.S3Object;
-import com.amazonaws.services.s3.model.S3ObjectSummary;
-import com.amazonaws.services.s3.model.SSEAwsKeyManagementParams;
-import com.amazonaws.util.StringUtils;
 import org.jgroups.Address;
 import org.jgroups.annotations.Property;
 import org.jgroups.aws.s3.NATIVE_S3_PING;
@@ -31,6 +13,23 @@ import org.jgroups.protocols.FILE_PING;
 import org.jgroups.protocols.PingData;
 import org.jgroups.util.Responses;
 import org.jgroups.util.Util;
+import software.amazon.awssdk.auth.credentials.DefaultCredentialsProvider;
+import software.amazon.awssdk.core.ResponseBytes;
+import software.amazon.awssdk.core.sync.RequestBody;
+import software.amazon.awssdk.regions.Region;
+import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.S3ClientBuilder;
+import software.amazon.awssdk.services.s3.model.CreateBucketRequest;
+import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
+import software.amazon.awssdk.services.s3.model.GetObjectRequest;
+import software.amazon.awssdk.services.s3.model.GetObjectResponse;
+import software.amazon.awssdk.services.s3.model.HeadBucketRequest;
+import software.amazon.awssdk.services.s3.model.ListObjectsRequest;
+import software.amazon.awssdk.services.s3.model.ListObjectsResponse;
+import software.amazon.awssdk.services.s3.model.NoSuchBucketException;
+import software.amazon.awssdk.services.s3.model.ObjectCannedACL;
+import software.amazon.awssdk.services.s3.model.PutObjectRequest;
+import software.amazon.awssdk.services.s3.model.S3Object;
 
 /**
  * This implementation uses the AWS SDK in order to be more solid and to benefit from the built-in security features
@@ -38,14 +37,13 @@ import org.jgroups.util.Util;
  *
  * @author Tobias Sarnowski
  * @author Bela Ban
+ * @author Radoslav Husar
  */
 public class S3_PING extends FILE_PING {
     protected static final short  JGROUPS_PROTOCOL_DEFAULT_MAGIC_NUMBER=789;
     protected static final int    SERIALIZATION_BUFFER_SIZE=4096;
     protected static final String SERIALIZED_CONTENT_TYPE="text/plain";
     protected static final String MAGIC_NUMBER_SYSTEM_PROPERTY="s3ping.magic_number";
-
-    protected static final AccessControlList BUCKET_OWNER_FULL_CONTROL_ACL = new AccessControlList();
 
     @Property(description="The S3 path-style enable (optional).", exposeAsManagedAttribute=false)
     protected boolean  path_style_access_enabled=false;
@@ -72,13 +70,11 @@ public class S3_PING extends FILE_PING {
     @Property(description="Use kms encryption with s3 with the given kms key (optionally - enables KMS Server side encryption (SSE-KMS) using the given kms key)", exposeAsManagedAttribute=false)
     protected String  kms_key_id;
 
-    protected AmazonS3 s3;
-
-    protected SSEAwsKeyManagementParams encryptionParams;
+    protected S3Client s3Client;
 
     static {
         short magicNumber=JGROUPS_PROTOCOL_DEFAULT_MAGIC_NUMBER;
-        if(!StringUtils.isNullOrEmpty(System.getProperty(MAGIC_NUMBER_SYSTEM_PROPERTY))) {
+        if(!isNullOrEmpty(System.getProperty(MAGIC_NUMBER_SYSTEM_PROPERTY))) {
             try {
                 magicNumber=Short.parseShort(System.getProperty(MAGIC_NUMBER_SYSTEM_PROPERTY));
             }
@@ -95,44 +91,46 @@ public class S3_PING extends FILE_PING {
     public void init() throws Exception {
         super.init();
 
-        if(bucket_prefix == null || bucket_prefix.equals("/"))
-            bucket_prefix="";
-        else if(!bucket_prefix.endsWith("/") && !bucket_prefix.isEmpty())
-            bucket_prefix=bucket_prefix + "/";
+        if (bucket_prefix == null || bucket_prefix.equals("/")) {
+            bucket_prefix = "";
+        } else if (!bucket_prefix.endsWith("/") && !bucket_prefix.isEmpty()) {
+            bucket_prefix = bucket_prefix + "/";
+        }
 
-        DefaultAWSCredentialsProviderChain creds=DefaultAWSCredentialsProviderChain.getInstance();
-        AmazonS3ClientBuilder builder=AmazonS3ClientBuilder.standard().withCredentials(creds).withPathStyleAccessEnabled(path_style_access_enabled);
-        if(!StringUtils.isNullOrEmpty(endpoint)) {
-            builder=builder.withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration(endpoint, region_name));
+        S3ClientBuilder builder = S3Client.builder();
+        builder.credentialsProvider(DefaultCredentialsProvider.create());
+
+        // TODO Is this meant to replace #withPathStyleAccessEnabled ?
+        builder.forcePathStyle(path_style_access_enabled);
+
+        Region region = Region.of(region_name);
+        builder.region(region);
+
+        if (!isNullOrEmpty(endpoint)) {
+            builder.endpointOverride(new URI(endpoint));
             log.info("set Amazon S3 endpoint to %s", endpoint);
-        } else {
-            builder.withRegion(region_name);
         }
-        s3=builder.build();
-        log.info("using Amazon S3 ping in region %s with bucket '%s' and prefix '%s'", region_name, bucket_name, bucket_prefix);
+        s3Client = builder.build();
+        log.info("using Amazon S3 ping in region %s with bucket '%s' and prefix '%s'", region, bucket_name, bucket_prefix);
 
-        if (!StringUtils.isNullOrEmpty(kms_key_id)) {
-            encryptionParams = new SSEAwsKeyManagementParams().withAwsKmsKeyId(kms_key_id);
-            log.info("using S3 client with KMS");
+        if(!check_if_bucket_exists) return;
+
+        boolean bucket_exists;
+        HeadBucketRequest headBucketRequest = HeadBucketRequest.builder().bucket(bucket_name).build();
+        try {
+            s3Client.headBucket(headBucketRequest);
+            bucket_exists = true;
+        } catch (NoSuchBucketException ignore) {
+            bucket_exists = false;
         }
 
-        if(!check_if_bucket_exists)
-            return;
-        boolean bucket_exists=s3.doesBucketExistV2(bucket_name);
-        if(!bucket_exists) {
+        if (!bucket_exists) {
             log.info("bucket %s does not exist, creating it\n", bucket_name);
-            s3.createBucket(bucket_name);
+            CreateBucketRequest createBucketRequest = CreateBucketRequest.builder().bucket(bucket_name).build();
+            s3Client.createBucket(createBucketRequest);
             log.info("created bucket %s\n", bucket_name);
-        }
-        else
+        } else {
             log.info("found bucket %s\n", bucket_name);
-
-        // Initialize the bucket owner full control grant.
-        if (acl_grant_bucket_owner_full_control) {
-            BUCKET_OWNER_FULL_CONTROL_ACL.grantAllPermissions(new Grant(
-                    new CanonicalGrantee(s3.getS3AccountOwner().getId()),
-                    Permission.FullControl
-            ));
         }
     }
 
@@ -156,55 +154,53 @@ public class S3_PING extends FILE_PING {
             log.trace("getting entries for %s ...", clusterPrefix);
 
         try {
-            final ObjectListing objectListing=s3.listObjects(
-              new ListObjectsRequest()
-                .withBucketName(bucket_name)
-                .withPrefix(clusterPrefix));
+            ListObjectsRequest listObjectsRequest = ListObjectsRequest.builder().bucket(bucket_name).prefix(clusterPrefix).build();
+            final ListObjectsResponse objects = s3Client.listObjects(listObjectsRequest);
 
             if(log.isTraceEnabled())
-                log.trace("got object listing, %d entries [%s]", objectListing.getObjectSummaries().size(), clusterPrefix);
+                log.trace("got object listing, %d entries [%s]", objects.contents().size(), clusterPrefix);
 
             // TODO batching not supported; can result in wrong lists if bucket has too many entries
 
-            for(final S3ObjectSummary summary : objectListing.getObjectSummaries()) {
-                if(log.isTraceEnabled())
-                    log.trace("fetching data for object %s ...", summary.getKey());
+            for (final S3Object s3Object : objects.contents()) {
+                if (log.isTraceEnabled())
+                    log.trace("fetching data for object %s ...", s3Object.key());
 
-                if(summary.getSize() > 0) {
-                    final S3Object object=s3.getObject(new GetObjectRequest(summary.getBucketName(), summary.getKey()));
-                    if(log.isTraceEnabled())
-                        log.trace("parsing data for object %s (%s, %d bytes)...", summary.getKey(),
-                                  object.getObjectMetadata().getContentType(), object.getObjectMetadata().getContentLength());
+                if (s3Object.size() > 0) {
+                    GetObjectRequest getObjectRequest = GetObjectRequest.builder().bucket(bucket_name).key(s3Object.key()).build();
+                    ResponseBytes<GetObjectResponse> objectAsBytes = s3Client.getObjectAsBytes(getObjectRequest);
 
-                    final List<PingData> data=read(object.getObjectContent());
-                    if(data == null) {
+                    if (log.isTraceEnabled()) {
+                        log.trace("parsing data for object %s (%s)...", s3Object.key(), objectAsBytes.toString());
+                    }
+
+                    final List<PingData> data = this.read(objectAsBytes.asInputStream());
+                    if (data == null) {
                         log.debug("fetched update for member list in Amazon S3 is empty [%s]", clusterPrefix);
                         break;
                     }
-                    for(final PingData pingData : data) {
-                        if(members == null || members.contains(pingData.getAddress())) {
+                    for (final PingData pingData : data) {
+                        if (members == null || members.contains(pingData.getAddress())) {
                             responses.addResponse(pingData, pingData.isCoord());
-                            if(log.isTraceEnabled())
+                            if (log.isTraceEnabled())
                                 log.trace("added member %s [members: %s]", pingData, members != null);
                         }
-                        if(local_addr != null && !local_addr.equals(pingData.getAddress())) {
+                        if (local_addr != null && !local_addr.equals(pingData.getAddress())) {
                             addDiscoveryResponseToCaches(pingData.getAddress(), pingData.getLogicalName(),
-                                                         pingData.getPhysicalAddr());
-                            if(log.isTraceEnabled())
+                                    pingData.getPhysicalAddr());
+                            if (log.isTraceEnabled())
                                 log.trace("added possible member %s [local address: %s]", pingData, local_addr);
                         }
-                        if(log.isTraceEnabled())
-                            log.trace("processed entry in Amazon S3 [%s -> %s]", summary.getKey(), pingData);
+                        if (log.isTraceEnabled())
+                            log.trace("processed entry in Amazon S3 [%s -> %s]", s3Object.key(), pingData);
                     }
-                }
-                else {
-                    if(log.isTraceEnabled())
-                        log.trace("skipping object %s as it is empty", summary.getKey());
+                } else {
+                    if (log.isTraceEnabled())
+                        log.trace("skipping object %s as it is empty", s3Object.key());
                 }
             }
             log.debug("fetched update for member list in Amazon S3 [%s]", clusterPrefix);
-        }
-        catch(final Exception e) {
+        } catch (final Exception e) {
             log.error(String.format("failed getting member list from Amazon S3 [%s]", clusterPrefix), e);
         }
     }
@@ -212,35 +208,35 @@ public class S3_PING extends FILE_PING {
     @Override
     protected void write(final List<PingData> list, final String clustername) {
         final String filename=addressToFilename(local_addr);
-        final String key=getClusterPrefix(clustername) + filename;
+        final String key = getClusterPrefix(clustername) + filename;
 
         try {
-            final ByteArrayOutputStream outStream=new ByteArrayOutputStream(SERIALIZATION_BUFFER_SIZE);
-            write(list, outStream);
+            final ByteArrayOutputStream outStream = new ByteArrayOutputStream(SERIALIZATION_BUFFER_SIZE);
+            this.write(list, outStream);
+            final byte[] data = outStream.toByteArray();
 
-            final byte[] data=outStream.toByteArray();
-            final ByteArrayInputStream inStream=new ByteArrayInputStream(data);
-            final ObjectMetadata objectMetadata=new ObjectMetadata();
-            objectMetadata.setContentType(SERIALIZED_CONTENT_TYPE);
-            objectMetadata.setContentLength(data.length);
-
-            if(log.isTraceEnabled())
+            if (log.isTraceEnabled()) {
                 log.trace("new S3 file content (%d bytes): %s", data.length, new String(data));
+            }
 
-            PutObjectRequest putRequest = new PutObjectRequest(bucket_name, key, inStream, objectMetadata);
+            PutObjectRequest.Builder putRequestBuilder = PutObjectRequest.builder()
+                    .bucket(bucket_name)
+                    .key(key)
+                    .contentType(SERIALIZED_CONTENT_TYPE);
 
             if (acl_grant_bucket_owner_full_control) {
-                putRequest = putRequest.withAccessControlList(BUCKET_OWNER_FULL_CONTROL_ACL);
+                putRequestBuilder.acl(ObjectCannedACL.BUCKET_OWNER_FULL_CONTROL);
             }
 
-            if (encryptionParams != null) {
-                putRequest = putRequest.withSSEAwsKeyManagementParams(encryptionParams);
+            if (!isNullOrEmpty(kms_key_id)) {
+                putRequestBuilder.ssekmsKeyId(kms_key_id);
             }
 
-            s3.putObject(putRequest);
+            RequestBody requestBody = RequestBody.fromBytes(data);
+            s3Client.putObject(putRequestBuilder.build(), requestBody);
+
             log.debug("wrote member list to Amazon S3 [%s -> %s]", key, list);
-        }
-        catch(final Exception e) {
+        } catch (final Exception e) {
             log.error(String.format("failed to update member list in Amazon S3 [%s]", key), e);
         }
     }
@@ -252,7 +248,8 @@ public class S3_PING extends FILE_PING {
         String filename=addressToFilename(addr);
         String key=getClusterPrefix(clustername) + filename;
         try {
-            s3.deleteObject(new DeleteObjectRequest(bucket_name, key));
+            DeleteObjectRequest deleteObjectRequest = DeleteObjectRequest.builder().bucket(bucket_name).key(key).build();
+            s3Client.deleteObject(deleteObjectRequest);
             if(log.isTraceEnabled())
                 log.trace("removing " + key);
         }
@@ -269,24 +266,23 @@ public class S3_PING extends FILE_PING {
         final String clusterPrefix=getClusterPrefix(clustername);
 
         try {
-            final ObjectListing objectListing=s3.listObjects(
-              new ListObjectsRequest()
-                .withBucketName(bucket_name)
-                .withPrefix(clusterPrefix));
+            final ListObjectsRequest listRequest = ListObjectsRequest.builder().bucket(bucket_name).prefix(clusterPrefix).build();
+            final ListObjectsResponse objectListing = s3Client.listObjects(listRequest);
 
             if(log.isTraceEnabled())
-                log.trace("got object listing, %d entries [%s]", objectListing.getObjectSummaries().size(), clusterPrefix);
+                log.trace("got object listing, %d entries [%s]", objectListing.contents().size(), clusterPrefix);
 
-            for(final S3ObjectSummary summary : objectListing.getObjectSummaries()) {
+            for(final S3Object summary : objectListing.contents()) {
                 if(log.isTraceEnabled())
-                    log.trace("fetching data for object %s ...", summary.getKey());
+                    log.trace("fetching data for object %s ...", summary.key());
                 try {
-                    s3.deleteObject(new DeleteObjectRequest(bucket_name, summary.getKey()));
+                    DeleteObjectRequest deleteObjectRequest = DeleteObjectRequest.builder().bucket(bucket_name).key(summary.key()).build();
+                    s3Client.deleteObject(deleteObjectRequest);
                     if(log.isTraceEnabled())
-                        log.trace("removing %s/%s", summary.getKey());
+                        log.trace("removing %s/%s", summary.key());
                 }
                 catch(Throwable t) {
-                    log.error("failed deleting object %s/%s: %s", summary.getKey(), t);
+                    log.error("failed deleting object %s/%s: %s", summary.key(), t);
                 }
             }
         }
@@ -295,4 +291,7 @@ public class S3_PING extends FILE_PING {
         }
     }
 
+    private static boolean isNullOrEmpty(String s) {
+        return s == null || s.trim().length() == 0;
+    }
 }

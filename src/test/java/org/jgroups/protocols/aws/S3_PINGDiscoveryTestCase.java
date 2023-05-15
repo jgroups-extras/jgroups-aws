@@ -67,7 +67,7 @@ public class S3_PINGDiscoveryTestCase {
     }
 
     private static void assumeCredentials() {
-        Assume.assumeTrue("Credentials are not available, test is ignored!", System.getenv("AWS_ACCESS_KEY_ID") != null && System.getenv("AWS_SECRET_KEY") != null && System.getenv("S3_PING_BUCKET_NAME") != null);
+        Assume.assumeTrue("Credentials are not available, test is ignored!", System.getenv("AWS_ACCESS_KEY_ID") != null && System.getenv("AWS_SECRET_ACCESS_KEY") != null && System.getenv("S3_PING_BUCKET_NAME") != null);
     }
 
     private void discover(String clusterName, String stackName) throws Exception {
