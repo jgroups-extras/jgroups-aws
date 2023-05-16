@@ -108,10 +108,10 @@ public class S3_PING extends FILE_PING {
 
         if (!isNullOrEmpty(endpoint)) {
             builder.endpointOverride(new URI(endpoint));
-            log.info("set Amazon S3 endpoint to %s", endpoint);
+            log.info("Set Amazon S3 endpoint to %s", endpoint);
         }
         s3Client = builder.build();
-        log.info("using Amazon S3 ping in region %s with bucket '%s' and prefix '%s'", region, bucket_name, bucket_prefix);
+        log.info("Using Amazon S3 ping in region %s with bucket '%s' and prefix '%s'", region, bucket_name, bucket_prefix);
 
         if(!check_if_bucket_exists) return;
 
@@ -125,12 +125,12 @@ public class S3_PING extends FILE_PING {
         }
 
         if (!bucket_exists) {
-            log.info("bucket %s does not exist, creating it\n", bucket_name);
+            log.info("Bucket %s does not exist, creating it", bucket_name);
             CreateBucketRequest createBucketRequest = CreateBucketRequest.builder().bucket(bucket_name).build();
             s3Client.createBucket(createBucketRequest);
-            log.info("created bucket %s\n", bucket_name);
+            log.info("Created bucket %s", bucket_name);
         } else {
-            log.info("found bucket %s\n", bucket_name);
+            log.info("Found bucket %s", bucket_name);
         }
     }
 
@@ -151,57 +151,57 @@ public class S3_PING extends FILE_PING {
         final String clusterPrefix=getClusterPrefix(clustername);
 
         if(log.isTraceEnabled())
-            log.trace("getting entries for %s ...", clusterPrefix);
+            log.trace("Getting entries for %s ...", clusterPrefix);
 
         try {
             ListObjectsRequest listObjectsRequest = ListObjectsRequest.builder().bucket(bucket_name).prefix(clusterPrefix).build();
             final ListObjectsResponse objects = s3Client.listObjects(listObjectsRequest);
 
             if(log.isTraceEnabled())
-                log.trace("got object listing, %d entries [%s]", objects.contents().size(), clusterPrefix);
+                log.trace("Got object listing, %d entries [%s]", objects.contents().size(), clusterPrefix);
 
             // TODO batching not supported; can result in wrong lists if bucket has too many entries
 
             for (final S3Object s3Object : objects.contents()) {
                 if (log.isTraceEnabled())
-                    log.trace("fetching data for object %s ...", s3Object.key());
+                    log.trace("Fetching data for object %s ...", s3Object.key());
 
                 if (s3Object.size() > 0) {
                     GetObjectRequest getObjectRequest = GetObjectRequest.builder().bucket(bucket_name).key(s3Object.key()).build();
                     ResponseBytes<GetObjectResponse> objectAsBytes = s3Client.getObjectAsBytes(getObjectRequest);
 
                     if (log.isTraceEnabled()) {
-                        log.trace("parsing data for object %s (%s)...", s3Object.key(), objectAsBytes.toString());
+                        log.trace("Parsing data for object %s (%s)...", s3Object.key(), objectAsBytes.toString());
                     }
 
                     final List<PingData> data = this.read(objectAsBytes.asInputStream());
                     if (data == null) {
-                        log.debug("fetched update for member list in Amazon S3 is empty [%s]", clusterPrefix);
+                        log.debug("Fetched update for member list in Amazon S3 is empty [%s]", clusterPrefix);
                         break;
                     }
                     for (final PingData pingData : data) {
                         if (members == null || members.contains(pingData.getAddress())) {
                             responses.addResponse(pingData, pingData.isCoord());
                             if (log.isTraceEnabled())
-                                log.trace("added member %s [members: %s]", pingData, members != null);
+                                log.trace("Added member %s [members: %s]", pingData, members != null);
                         }
                         if (local_addr != null && !local_addr.equals(pingData.getAddress())) {
-                            addDiscoveryResponseToCaches(pingData.getAddress(), pingData.getLogicalName(),
-                                    pingData.getPhysicalAddr());
-                            if (log.isTraceEnabled())
-                                log.trace("added possible member %s [local address: %s]", pingData, local_addr);
+                            addDiscoveryResponseToCaches(pingData.getAddress(), pingData.getLogicalName(), pingData.getPhysicalAddr());
+                            if (log.isTraceEnabled()) {
+                                log.trace("Added possible member %s [local address: %s]", pingData, local_addr);
+                            }
                         }
                         if (log.isTraceEnabled())
-                            log.trace("processed entry in Amazon S3 [%s -> %s]", s3Object.key(), pingData);
+                            log.trace("Processed entry in Amazon S3 [%s -> %s]", s3Object.key(), pingData);
                     }
                 } else {
                     if (log.isTraceEnabled())
-                        log.trace("skipping object %s as it is empty", s3Object.key());
+                        log.trace("Skipping object %s as it is empty", s3Object.key());
                 }
             }
-            log.debug("fetched update for member list in Amazon S3 [%s]", clusterPrefix);
+            log.debug("Fetched update for member list in Amazon S3 [%s]", clusterPrefix);
         } catch (final Exception e) {
-            log.error(String.format("failed getting member list from Amazon S3 [%s]", clusterPrefix), e);
+            log.error(String.format("Failed getting member list from Amazon S3 [%s]", clusterPrefix), e);
         }
     }
 
@@ -216,7 +216,7 @@ public class S3_PING extends FILE_PING {
             final byte[] data = outStream.toByteArray();
 
             if (log.isTraceEnabled()) {
-                log.trace("new S3 file content (%d bytes): %s", data.length, new String(data));
+                log.trace("New S3 file content (%d bytes): %s", data.length, new String(data));
             }
 
             PutObjectRequest.Builder putRequestBuilder = PutObjectRequest.builder()
@@ -235,9 +235,9 @@ public class S3_PING extends FILE_PING {
             RequestBody requestBody = RequestBody.fromBytes(data);
             s3Client.putObject(putRequestBuilder.build(), requestBody);
 
-            log.debug("wrote member list to Amazon S3 [%s -> %s]", key, list);
+            log.debug("Wrote member list to Amazon S3 [%s -> %s]", key, list);
         } catch (final Exception e) {
-            log.error(String.format("failed to update member list in Amazon S3 [%s]", key), e);
+            log.error(String.format("Failed to update member list in Amazon S3 [%s]", key), e);
         }
     }
 
@@ -267,22 +267,22 @@ public class S3_PING extends FILE_PING {
 
         try {
             final ListObjectsRequest listRequest = ListObjectsRequest.builder().bucket(bucket_name).prefix(clusterPrefix).build();
-            final ListObjectsResponse objectListing = s3Client.listObjects(listRequest);
+            final ListObjectsResponse objects = s3Client.listObjects(listRequest);
 
             if(log.isTraceEnabled())
-                log.trace("got object listing, %d entries [%s]", objectListing.contents().size(), clusterPrefix);
+                log.trace("Got object listing, %d entries [%s]", objects.contents().size(), clusterPrefix);
 
-            for(final S3Object summary : objectListing.contents()) {
+            for(final S3Object object : objects.contents()) {
                 if(log.isTraceEnabled())
-                    log.trace("fetching data for object %s ...", summary.key());
+                    log.trace("Fetching data for object %s ...", object.key());
                 try {
-                    DeleteObjectRequest deleteObjectRequest = DeleteObjectRequest.builder().bucket(bucket_name).key(summary.key()).build();
+                    DeleteObjectRequest deleteObjectRequest = DeleteObjectRequest.builder().bucket(bucket_name).key(object.key()).build();
                     s3Client.deleteObject(deleteObjectRequest);
                     if(log.isTraceEnabled())
-                        log.trace("removing %s/%s", summary.key());
+                        log.trace("Removing %s/%s", object.key());
                 }
                 catch(Throwable t) {
-                    log.error("failed deleting object %s/%s: %s", summary.key(), t);
+                    log.error("Failed deleting object %s/%s: %s", object.key(), t);
                 }
             }
         }
