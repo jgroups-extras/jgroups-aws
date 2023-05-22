@@ -92,7 +92,7 @@ along with setting the region name and a bucket name.
 
 ```shell
 declare -x AWS_ACCESS_KEY_ID="qF7ujVAaYUp3Tx7m"
-declare -x AWS_SECRET_KEY="WzbG3R2KGtx5rsHQUx2PKQPS2f6WzMtf"
+declare -x AWS_SECRET_ACCESS_KEY="WzbG3R2KGtx5rsHQUx2PKQPS2f6WzMtf"
 declare -x S3_PING_REGION_NAME="eu-central-1"
 declare -x S3_PING_BUCKET_NAME="jgroups"
 mvn verify
