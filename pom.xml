@@ -4,7 +4,7 @@
     <artifactId>jgroups-aws</artifactId>
     <packaging>jar</packaging>
     <name>JGroups - AWS</name>
-    <version>2.0.2.Final-SNAPSHOT</version>
+    <version>3.0.0.Final-SNAPSHOT</version>
     <url>https://www.github.com/jgroups-extras/jgroups-aws</url>
 
     <properties>
