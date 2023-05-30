@@ -4,7 +4,7 @@ Discovery protocol using AWS S3 buckets as cluster information store. Based on t
 Tobias Sarnowski at Zalando [1,2], and ported to JGroups 4.x by Bela Ban in 2017.
 
 To use it, include the following dependencies:
-* `module: org.jgroups.aws` / `artifactId: jgroups-aws` / `version: 2.0.1.Final` (or higher)
+* `module: org.jgroups.aws` / `artifactId: jgroups-aws` / `version: 3.0.0.Final` (or higher)
 
 Native means, it uses the AWS SDK [3] and does not implement the HTTP protocol on its own. The benefit is a more stable
 connection as well as usage of IAM server profiles and AWS standardized credential distribution.
@@ -14,7 +14,7 @@ connection as well as usage of IAM server profiles and AWS standardized credenti
 <dependency>
     <groupId>org.jgroups.aws</groupId>
     <artifactId>jgroups-aws</artifactId>
-    <version>2.0.1.Final</version>
+    <version>3.0.0.Final</version>
 </dependency>
 ```
 
@@ -105,6 +105,16 @@ If any of the required properties are not specified tests will be skipped (uses 
 Project JGroups AWS uses GitHub issues:
 
 [https://github.com/jgroups-extras/jgroups-aws/issues](https://github.com/jgroups-extras/jgroups-aws/issues)
+
+
+# Support Matrix
+
+Version (branch) | JGroups version | AWS SDK
+---------------- |-----------------|---------
+`main`           | 5.2.x           | v2
+`2.x`            | 5.2.x           | v1
+`1.x`            | 4.2.x           | v1
+
 
 # References
 
