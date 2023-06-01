@@ -25,7 +25,6 @@ import org.jgroups.JChannel;
 import org.jgroups.aws.s3.NATIVE_S3_PING;
 import org.jgroups.util.Util;
 import org.junit.Assert;
-import org.junit.Assume;
 import org.junit.Test;
 
 /**
@@ -33,7 +32,7 @@ import org.junit.Test;
  *
  * @author Radoslav Husar
  */
-public class S3_PINGDiscoveryTestCase {
+public abstract class AbstractS3_PINGDiscoveryTestCase {
 
     public static final int CHANNEL_COUNT = 5;
 
@@ -43,15 +42,11 @@ public class S3_PINGDiscoveryTestCase {
 
     @Test
     public void testDiscovery() throws Exception {
-        assumeCredentials();
-
         discover(RANDOM_CLUSTER_NAME, S3_PING.class.getSimpleName());
     }
 
     @Test
     public void testDiscoveryObscureClusterName() throws Exception {
-        assumeCredentials();
-
         String obscureClusterName = "``\\//--+ěščřžýáíé==''!@#$%^&*()_{}<>?";
         discover(obscureClusterName + RANDOM_CLUSTER_NAME, S3_PING.class.getSimpleName());
     }
@@ -61,13 +56,7 @@ public class S3_PINGDiscoveryTestCase {
      */
     @Test
     public void testLegacyDiscovery() throws Exception {
-        assumeCredentials();
-
         discover(RANDOM_CLUSTER_NAME, NATIVE_S3_PING.class.getSimpleName());
-    }
-
-    private static void assumeCredentials() {
-        Assume.assumeTrue("Credentials are not available, test is ignored!", System.getenv("AWS_ACCESS_KEY_ID") != null && System.getenv("AWS_SECRET_ACCESS_KEY") != null && System.getenv("S3_PING_BUCKET_NAME") != null);
     }
 
     private void discover(String clusterName, String stackName) throws Exception {
