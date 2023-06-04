@@ -6,7 +6,5 @@ updates:
       interval: daily
     open-pull-requests-limit: 10
     ignore:
-      - dependency-name: com.amazonaws:aws-java-sdk-core
-        update-types: [ version-update:semver-patch ]
-      - dependency-name: com.amazonaws:aws-java-sdk-s3
+      - dependency-name: software.amazon.awssdk:bom
         update-types: [ version-update:semver-patch ]
