@@ -139,6 +139,12 @@
             <groupId>org.jgroups</groupId>
             <artifactId>jgroups</artifactId>
             <version>${jgroups.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.jboss.byteman</groupId>
+                    <artifactId>byteman-bmunit</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <!-- AWS dependencies -->
