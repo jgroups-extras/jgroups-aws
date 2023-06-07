@@ -139,14 +139,16 @@
             <groupId>org.jgroups</groupId>
             <artifactId>jgroups</artifactId>
             <version>${jgroups.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.jboss.byteman</groupId>
+                    <artifactId>byteman-bmunit</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <!-- AWS dependencies -->
         <!-- n.b. versions are managed by the imported BOM -->
-        <dependency>
-            <groupId>software.amazon.awssdk</groupId>
-            <artifactId>auth</artifactId>
-        </dependency>
         <dependency>
             <groupId>software.amazon.awssdk</groupId>
             <artifactId>s3</artifactId>
