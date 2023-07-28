@@ -8,3 +8,7 @@ updates:
     ignore:
       - dependency-name: software.amazon.awssdk:bom
         update-types: [ version-update:semver-patch ]
+      # s3mock-testcontainers versions since 3.x require JDK 17 for runtime
+      # We ignore until we move the baseline ourselves to JDK 17
+      - dependency-name: com.adobe.testing:s3mock-testcontainers
+        versions: [ ">= 3" ]
