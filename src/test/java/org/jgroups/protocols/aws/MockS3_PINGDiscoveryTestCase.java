@@ -35,7 +35,8 @@ public class MockS3_PINGDiscoveryTestCase extends AbstractS3_PINGDiscoveryTestCa
     public static void setUp() {
         Assume.assumeTrue("Docker environment is not available - skipping tests against S3 mock service.", isDockerAvailable());
 
-        s3Mock = new S3MockContainer("latest");
+        // TODO Since 3.3.0 the obscure cluster name tests start to fail. Manage the version manually and keep on '3.2.0' for now.
+        s3Mock = new S3MockContainer("3.2.0");
         s3Mock.start();
 
         // TODO workaround using S3MockContainer#getHttpEndpoint() by an IP address so it doesn't rely on spoofing DNS records
