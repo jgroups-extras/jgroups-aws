@@ -17,13 +17,16 @@
 package org.jgroups.protocols.aws;
 
 import com.adobe.testing.s3mock.testcontainers.S3MockContainer;
+import org.jgroups.util.Util;
 import org.junit.AfterClass;
 import org.junit.Assume;
 import org.junit.BeforeClass;
 import org.testcontainers.DockerClientFactory;
 
+import static org.junit.Assert.fail;
+
 /**
- * Tests against a mock S3 service.
+ * Tests against a containerized mock S3 service.
  *
  * @author Radoslav Husar
  */
@@ -33,7 +36,12 @@ public class MockS3_PINGDiscoveryTestCase extends AbstractS3_PINGDiscoveryTestCa
 
     @BeforeClass
     public static void setUp() {
-        Assume.assumeTrue("Docker environment is not available - skipping tests against S3 mock service.", isDockerAvailable());
+        // If credentials are available, we can conditionally skip Mock tests
+        if (isGenuineCredentialsAvailable() || (!isDockerAvailable() && !Util.checkForLinux())) {
+            Assume.assumeTrue("Podman/Docker environment is not available - skipping tests against S3 mock service.", isDockerAvailable());
+        } else if (!isDockerAvailable()) {
+            fail("Credentials are not provided, thus Podman/Docker on Linux is required to run tests against a mock service!");
+        }
 
         // TODO Since 3.3.0 the obscure cluster name tests start to fail. Manage the version manually and keep on '3.2.0' for now.
         s3Mock = new S3MockContainer("3.2.0");
