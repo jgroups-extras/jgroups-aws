@@ -20,15 +20,14 @@ import org.junit.Assume;
 import org.junit.BeforeClass;
 
 /**
- * Tests against real S3 endpoint requiring credentials.
+ * Tests against genuine S3 endpoint requiring credentials.
  *
  * @author Radoslav Husar
  */
-public class RealS3_PINGDiscoveryTestCase extends AbstractS3_PINGDiscoveryTestCase {
+public class GenuineS3_PINGDiscoveryTestCase extends AbstractS3_PINGDiscoveryTestCase {
 
     @BeforeClass
     public static void assumeCredentials() {
-        Assume.assumeTrue("Credentials are not available, test is ignored!", System.getenv("AWS_ACCESS_KEY_ID") != null && System.getenv("AWS_SECRET_ACCESS_KEY") != null && System.getenv("S3_PING_BUCKET_NAME") != null);
+        Assume.assumeTrue("Credentials are not available, test will be ignored!", isGenuineCredentialsAvailable());
     }
-
 }

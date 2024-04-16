@@ -100,6 +100,9 @@ mvn verify
 
 If any of the required properties are not specified tests will be skipped (uses `org.junit.Assume`).
 
+In case credentials are not provided and running on Linux, tests will be run against mock containerized S3 instance.
+These require a functioning podman or Docker environment.
+
 # Reporting Issues
 
 Project JGroups AWS uses GitHub issues:
