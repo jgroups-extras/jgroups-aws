@@ -6,6 +6,8 @@ updates:
       interval: daily
     open-pull-requests-limit: 10
     ignore:
+      # These are released daily, so limit to minor updates
+      # https://mvnrepository.com/artifact/software.amazon.awssdk/bom
       - dependency-name: software.amazon.awssdk:bom
         update-types: [ version-update:semver-patch ]
       # s3mock-testcontainers versions since 3.x require JDK 17 for runtime
