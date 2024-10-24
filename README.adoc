@@ -1,50 +1,53 @@
-# JGroups AWS - S3_PING
+:toc:
+= JGroups AWS: `S3_PING`
 
-Discovery protocol using AWS S3 buckets as cluster information store. Based on the original code written by
-Tobias Sarnowski at Zalando [1,2], and ported to JGroups 4.x by Bela Ban in 2017.
+Discovery protocol using AWS S3 buckets as cluster information store.
+It is based on the original code written by Tobias Sarnowski at Zalando
+footnote:[https://libraries.io/github/zalando/jgroups-native-s3-ping]
+footnote:[https://github.com/jwegne/jgroups-native-s3-ping].
 
 To use it, include the following dependencies:
 * `module: org.jgroups.aws` / `artifactId: jgroups-aws` / `version: 3.0.0.Final` (or higher)
 
-Native means, it uses the AWS SDK [3] and does not implement the HTTP protocol on its own. The benefit is a more stable
+Native means, it uses the AWS SDK footnote:[http://docs.aws.amazon.com/AmazonS3/latest/dev/UsingTheMPDotJavaAPI.html] and does not implement the HTTP protocol on its own. The benefit is a more stable
 connection as well as usage of IAM server profiles and AWS standardized credential distribution.
 
-# Artifact
-```xml
+== Maven Coordinates
+
+[source,xml]
+----
 <dependency>
     <groupId>org.jgroups.aws</groupId>
     <artifactId>jgroups-aws</artifactId>
     <version>3.0.0.Final</version>
 </dependency>
-```
+----
 
-# Configuration
+== Protocol Configuration
 
-Like the original `S3_PING`, this library implement a JGroups discovery protocol which replaces protocols like
-`MPING` or `TCPPING`.
+This library implements a JGroups discovery protocol which replaces protocols like `MPING` or `TCPPING`.
 
-```xml
+[source,xml]
+----
 <aws.S3_PING region_name="us-east-1a"
              bucket_name="jgroups-s3-test"/>
-```
+----
 
-`aws.S3_PING` automatically registers itself to JGroups with the magic number 789. You can overwrite this by
-setting the system property `s3ping.magic_number` to different number:
+The `aws.S3_PING` automatically registers itself to JGroups with the magic number `789`.
+You can overwrite this by setting the system property `s3ping.magic_number` to different number, e.g. `-Ds3ping.magic_number=123`.
 
-`-Ds3ping.magic_number=123`
+=== Possible Configurations
 
-## Possible Configurations
+* *region_name*: like "eu-west-1", "us-east-1", etc.
+* *bucket_name*: the S3 bucket to store the files in
+* *bucket_prefix* (optional): if you don't want the plugin to pollute your S3 bucket, you can configure a prefix like "jgroups/"
+* *endpoint* (optional): you can override the S3 endpoint if you know what you are doing
+* *kms_key_id* (optional): you can set this to a kms key id to enable KMS-SSE encryption when writing data to S3 (see https://docs.aws.amazon.com/AmazonS3/latest/userguide/UsingKMSEncryption.html)
 
-* **region_name**: like "eu-west-1", "us-east-1", etc.
-* **bucket_name**: the S3 bucket to store the files in
-* **bucket_prefix** (optional): if you don't want the plugin to pollute your S3 bucket, you can configure a prefix like
-  "jgroups/"
-* **endpoint** (optional): you can override the S3 endpoint if you know what you are doing
-* **kms_key_id** (optional): you can set this to a kms key id to enable KMS-SSE encryption when writing data to S3 (see https://docs.aws.amazon.com/AmazonS3/latest/userguide/UsingKMSEncryption.html)
+=== Example Stack
 
-## Example Configuration
-
-```xml
+[source,xml]
+----
 <!--
 Based on tcp.xml but with new aws.S3_PING.
 -->
@@ -83,46 +86,39 @@ Based on tcp.xml but with new aws.S3_PING.
          min_threshold="0.4"/>
     <FRAG2 frag_size="60K"/>
 </config>
-```
+----
 
-# Testing
+== Testing
 
 Running the automated tests requires having AWS credentials setup with appropriate permissions
 along with setting the region name and a bucket name.
 
-```shell
+[source,shell]
+----
 declare -x AWS_ACCESS_KEY_ID="qF7ujVAaYUp3Tx7m"
 declare -x AWS_SECRET_ACCESS_KEY="WzbG3R2KGtx5rsHQUx2PKQPS2f6WzMtf"
 declare -x S3_PING_REGION_NAME="eu-central-1"
 declare -x S3_PING_BUCKET_NAME="jgroups"
 mvn verify
-```
+----
 
 If any of the required properties are not specified tests will be skipped (uses `org.junit.Assume`).
 
 In case credentials are not provided and running on Linux, tests will be run against mock containerized S3 instance.
 These require a functioning podman or Docker environment.
 
-# Reporting Issues
+== Reporting Issues
 
-Project JGroups AWS uses GitHub Issues:
+Project JGroups AWS uses GitHub Issues for tracking:
 
-[https://github.com/jgroups-extras/jgroups-aws/issues](https://github.com/jgroups-extras/jgroups-aws/issues)
+https://github.com/jgroups-extras/jgroups-aws/issues
 
+== Support Matrix
 
-# Support Matrix
+|===
+|Version (branch) |JGroups version |AWS SDK
 
-Version (branch) | JGroups version | AWS SDK
----------------- |-----------------|---------
-`main`           | 5.2.x - 5.3.x   | 2.x
-`2.x`            | 5.2.x           | 1.x
-`1.x`            | 4.2.x           | 1.x
-
-
-# References
-
-[1] https://libraries.io/github/zalando/jgroups-native-s3-ping
-
-[2] https://github.com/jwegne/jgroups-native-s3-ping
-
-[3] http://docs.aws.amazon.com/AmazonS3/latest/dev/UsingTheMPDotJavaAPI.html
+|`main` |5.2.x - 5.3.x |2.x
+|`2.x` |5.2.x |1.x
+|`1.x` |4.2.x |1.x
+|===
