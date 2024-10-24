@@ -43,8 +43,10 @@ public class MockS3_PINGDiscoveryTestCase extends AbstractS3_PINGDiscoveryTestCa
             fail("Credentials are not provided, thus Podman/Docker on Linux is required to run tests against a mock service!");
         }
 
-        // TODO Since 3.3.0 the obscure cluster name tests start to fail. Manage the version manually and keep on '3.2.0' for now.
-        s3Mock = new S3MockContainer("3.2.0");
+        // Note that referring to rolling 'latest' here, a new release might break (e.g. like version 3.3.0 did) in which case,
+        // the version must be explicitly downgraded here.
+        // n.b. for reference https://hub.docker.com/r/adobe/s3mock/tags
+        s3Mock = new S3MockContainer("latest");
         s3Mock.start();
 
         // TODO workaround using S3MockContainer#getHttpEndpoint() by an IP address so it doesn't rely on spoofing DNS records
