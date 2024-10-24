@@ -1,16 +1,13 @@
 :toc:
-= JGroups AWS: `S3_PING`
+= JGroups AWS – `S3_PING`
 
-Discovery protocol using AWS S3 buckets as cluster information store.
-It is based on the original code written by Tobias Sarnowski at Zalando
+Projects JGroups AWS provides an implementation of `S3_PING` discovery protocol using AWS S3 buckets as cluster information store.
+It is based on the original code written by Tobias Sarnowski at Zalando.
 footnote:[https://libraries.io/github/zalando/jgroups-native-s3-ping]
-footnote:[https://github.com/jwegne/jgroups-native-s3-ping].
+footnote:[https://github.com/jwegne/jgroups-native-s3-ping]
 
-To use it, include the following dependencies:
-* `module: org.jgroups.aws` / `artifactId: jgroups-aws` / `version: 3.0.0.Final` (or higher)
-
-Native means, it uses the AWS SDK footnote:[http://docs.aws.amazon.com/AmazonS3/latest/dev/UsingTheMPDotJavaAPI.html] and does not implement the HTTP protocol on its own. The benefit is a more stable
-connection as well as usage of IAM server profiles and AWS standardized credential distribution.
+It uses the official AWS SDK footnote:[http://docs.aws.amazon.com/AmazonS3/latest/dev/UsingTheMPDotJavaAPI.html] and does not implement the HTTP protocol on its own.
+The benefit is a more stable connection as well as usage of IAM server profiles and AWS standardized credential distribution.
 
 == Maven Coordinates
 
@@ -33,11 +30,13 @@ This library implements a JGroups discovery protocol which replaces protocols li
              bucket_name="jgroups-s3-test"/>
 ----
 
+// TODO: move this to configuration with other props
 The `aws.S3_PING` automatically registers itself to JGroups with the magic number `789`.
 You can overwrite this by setting the system property `s3ping.magic_number` to different number, e.g. `-Ds3ping.magic_number=123`.
 
 === Possible Configurations
 
+// TODO change this to table format
 * *region_name*: like "eu-west-1", "us-east-1", etc.
 * *bucket_name*: the S3 bucket to store the files in
 * *bucket_prefix* (optional): if you don't want the plugin to pollute your S3 bucket, you can configure a prefix like "jgroups/"
@@ -45,6 +44,8 @@ You can overwrite this by setting the system property `s3ping.magic_number` to d
 * *kms_key_id* (optional): you can set this to a kms key id to enable KMS-SSE encryption when writing data to S3 (see https://docs.aws.amazon.com/AmazonS3/latest/userguide/UsingKMSEncryption.html)
 
 === Example Stack
+
+// TODO update the sample protocol stack with jgroups 5.3.x default
 
 [source,xml]
 ----
