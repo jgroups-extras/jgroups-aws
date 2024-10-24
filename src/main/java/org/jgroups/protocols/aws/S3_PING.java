@@ -30,9 +30,10 @@ import software.amazon.awssdk.services.s3.model.NoSuchBucketException;
 import software.amazon.awssdk.services.s3.model.ObjectCannedACL;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import software.amazon.awssdk.services.s3.model.S3Object;
+import software.amazon.awssdk.services.s3.model.ServerSideEncryption;
 
 /**
- * This implementation uses the AWS SDK in order to be more solid and to benefit from the built-in security features
+ * This implementation uses the AWS SDK to be more solid and to benefit from the built-in security features
  * like getting credentials via IAM instance profiles instead of handling this in the application.
  *
  * @author Tobias Sarnowski
@@ -67,7 +68,7 @@ public class S3_PING extends FILE_PING {
         "on each update. This is useful in multi-region deployments where each region exists in its own AWS account.")
     protected boolean acl_grant_bucket_owner_full_control = false;
 
-    @Property(description="Use kms encryption with s3 with the given kms key (optionally - enables KMS Server side encryption (SSE-KMS) using the given kms key)", exposeAsManagedAttribute=false)
+    @Property(description="KMS key to use for enabling KMS server-side encryption (SSE-KMS) for S3 (optional).", exposeAsManagedAttribute=false)
     protected String  kms_key_id;
 
     protected S3Client s3Client;
@@ -229,6 +230,7 @@ public class S3_PING extends FILE_PING {
             }
 
             if (!isNullOrEmpty(kms_key_id)) {
+                putRequestBuilder.serverSideEncryption(ServerSideEncryption.AWS_KMS);
                 putRequestBuilder.ssekmsKeyId(kms_key_id);
             }
 
