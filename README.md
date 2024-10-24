@@ -105,7 +105,7 @@ These require a functioning podman or Docker environment.
 
 # Reporting Issues
 
-Project JGroups AWS uses GitHub issues:
+Project JGroups AWS uses GitHub Issues:
 
 [https://github.com/jgroups-extras/jgroups-aws/issues](https://github.com/jgroups-extras/jgroups-aws/issues)
 
@@ -114,9 +114,9 @@ Project JGroups AWS uses GitHub issues:
 
 Version (branch) | JGroups version | AWS SDK
 ---------------- |-----------------|---------
-`main`           | 5.2.x           | v2
-`2.x`            | 5.2.x           | v1
-`1.x`            | 4.2.x           | v1
+`main`           | 5.2.x - 5.3.x   | 2.x
+`2.x`            | 5.2.x           | 1.x
+`1.x`            | 4.2.x           | 1.x
 
 
 # References
