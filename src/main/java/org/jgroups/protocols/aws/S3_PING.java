@@ -75,7 +75,7 @@ public class S3_PING extends FILE_PING {
 
     static {
         short magicNumber=JGROUPS_PROTOCOL_DEFAULT_MAGIC_NUMBER;
-        if(!isNullOrEmpty(System.getProperty(MAGIC_NUMBER_SYSTEM_PROPERTY))) {
+        if(isDefined(System.getProperty(MAGIC_NUMBER_SYSTEM_PROPERTY))) {
             try {
                 magicNumber=Short.parseShort(System.getProperty(MAGIC_NUMBER_SYSTEM_PROPERTY));
             }
@@ -107,7 +107,7 @@ public class S3_PING extends FILE_PING {
         Region region = Region.of(region_name);
         builder.region(region);
 
-        if (!isNullOrEmpty(endpoint)) {
+        if (isDefined(endpoint)) {
             builder.endpointOverride(new URI(endpoint));
             log.info("Set Amazon S3 endpoint to %s", endpoint);
         }
@@ -229,7 +229,7 @@ public class S3_PING extends FILE_PING {
                 putRequestBuilder.acl(ObjectCannedACL.BUCKET_OWNER_FULL_CONTROL);
             }
 
-            if (!isNullOrEmpty(kms_key_id)) {
+            if (isDefined(kms_key_id)) {
                 putRequestBuilder.serverSideEncryption(ServerSideEncryption.AWS_KMS);
                 putRequestBuilder.ssekmsKeyId(kms_key_id);
             }
@@ -293,7 +293,7 @@ public class S3_PING extends FILE_PING {
         }
     }
 
-    private static boolean isNullOrEmpty(String s) {
-        return s == null || s.trim().length() == 0;
+    private static boolean isDefined(String s) {
+        return (s != null && !s.trim().isEmpty());
     }
 }
