@@ -46,30 +46,45 @@ public class S3_PING extends FILE_PING {
     protected static final String SERIALIZED_CONTENT_TYPE="text/plain";
     protected static final String MAGIC_NUMBER_SYSTEM_PROPERTY="s3ping.magic_number";
 
-    @Property(description="The S3 path-style enable (optional).", exposeAsManagedAttribute=false)
-    protected boolean  path_style_access_enabled=false;
+    @Property(description = "The S3 path-style enable (optional).",
+            systemProperty = "jgroups.aws.s3.path_style_access_enabled",
+            writable = false)
+    protected boolean path_style_access_enabled;
 
-    @Property(description="The S3 endpoint to use (optional).", exposeAsManagedAttribute=false)
-    protected String   endpoint;
+    @Property(description = "The S3 endpoint to use (optional).",
+            systemProperty = "jgroups.aws.s3.endpoint",
+            writable = false)
+    protected String endpoint;
 
-    @Property(description="The S3 region to use.", exposeAsManagedAttribute=false)
-    protected String   region_name;
+    @Property(description = "The S3 region to use.",
+            systemProperty = "jgroups.aws.s3.region_name",
+            writable = false)
+    protected String region_name;
 
-    @Property(description="The S3 bucket to use.", exposeAsManagedAttribute=false)
-    protected String   bucket_name;
+    @Property(description = "The S3 bucket to use.",
+            systemProperty = "jgroups.aws.s3.bucket_name",
+            writable = false)
+    protected String bucket_name;
 
-    @Property(description="The S3 bucket prefix to use (optional e.g. 'jgroups/').", exposeAsManagedAttribute=false)
-    protected String   bucket_prefix;
+    @Property(description = "The S3 bucket prefix to use (optional e.g. 'jgroups/').",
+            systemProperty = "jgroups.aws.s3.bucket_prefix",
+            writable = false)
+    protected String bucket_prefix;
 
-    @Property(description="Checks if the bucket exists in S3 and creates a new one if missing")
-    protected boolean  check_if_bucket_exists=true;
+    @Property(description = "Checks if the bucket exists in S3 and creates a new one if missing",
+            systemProperty = "jgroups.aws.s3.check_if_bucket_exists",
+            writable = false)
+    protected boolean check_if_bucket_exists = true;
 
-    @Property(description = "Flag indicating whether or not to grant the bucket owner full control over the bucket  " +
-        "on each update. This is useful in multi-region deployments where each region exists in its own AWS account.")
-    protected boolean acl_grant_bucket_owner_full_control = false;
+    @Property(description = "Flag indicating whether or not to grant the bucket owner full control over the bucket on each update. This is useful in multi-region deployments where each region exists in its own AWS account.",
+            systemProperty = "jgroups.aws.s3.acl_grant_bucket_owner_full_control",
+            writable = false)
+    protected boolean acl_grant_bucket_owner_full_control;
 
-    @Property(description="KMS key to use for enabling KMS server-side encryption (SSE-KMS) for S3 (optional).", exposeAsManagedAttribute=false)
-    protected String  kms_key_id;
+    @Property(description = "KMS key to use for enabling KMS server-side encryption (SSE-KMS) for S3 (optional).",
+            systemProperty = "jgroups.aws.s3.kms_key_id",
+            exposeAsManagedAttribute = false)
+    protected String kms_key_id;
 
     protected S3Client s3Client;
 
