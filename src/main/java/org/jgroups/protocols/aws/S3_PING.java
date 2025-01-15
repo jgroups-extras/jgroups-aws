@@ -47,42 +47,42 @@ public class S3_PING extends FILE_PING {
     protected static final String MAGIC_NUMBER_SYSTEM_PROPERTY="s3ping.magic_number";
 
     @Property(description = "The S3 path-style enable (optional).",
-            systemProperty = "jgroups.aws.s3.path_style_access_enabled",
+            systemProperty = {"jgroups.aws.s3.path_style_access_enabled", "JGROUPS_AWS_S3_PATH_STYLE_ACCESS_ENABLED"},
             writable = false)
     protected boolean path_style_access_enabled;
 
     @Property(description = "The S3 endpoint to use (optional).",
-            systemProperty = "jgroups.aws.s3.endpoint",
+            systemProperty = {"jgroups.aws.s3.endpoint", "JGROUPS_AWS_S3_ENDPOINT"},
             writable = false)
     protected String endpoint;
 
     @Property(description = "The S3 region to use.",
-            systemProperty = "jgroups.aws.s3.region_name",
+            systemProperty = {"jgroups.aws.s3.region_name", "JGROUPS_AWS_S3_REGION_NAME"},
             writable = false)
     protected String region_name;
 
     @Property(description = "The S3 bucket to use.",
-            systemProperty = "jgroups.aws.s3.bucket_name",
+            systemProperty = {"jgroups.aws.s3.bucket_name", "JGROUPS_AWS_S3_BUCKET_NAME"},
             writable = false)
     protected String bucket_name;
 
     @Property(description = "The S3 bucket prefix to use (optional e.g. 'jgroups/').",
-            systemProperty = "jgroups.aws.s3.bucket_prefix",
+            systemProperty = {"jgroups.aws.s3.bucket_prefix", "JGROUPS_AWS_S3_BUCKET_PREFIX"},
             writable = false)
     protected String bucket_prefix;
 
     @Property(description = "Checks if the bucket exists in S3 and creates a new one if missing",
-            systemProperty = "jgroups.aws.s3.check_if_bucket_exists",
+            systemProperty = {"jgroups.aws.s3.check_if_bucket_exists", "JGROUPS_AWS_S3_CHECK_IF_BUCKET_EXISTS"},
             writable = false)
     protected boolean check_if_bucket_exists = true;
 
     @Property(description = "Flag indicating whether or not to grant the bucket owner full control over the bucket on each update. This is useful in multi-region deployments where each region exists in its own AWS account.",
-            systemProperty = "jgroups.aws.s3.acl_grant_bucket_owner_full_control",
+            systemProperty = {"jgroups.aws.s3.acl_grant_bucket_owner_full_control", "JGROUPS_AWS_S3_ACL_GRANT_BUCKET_OWNER_FULL_CONTROL"},
             writable = false)
     protected boolean acl_grant_bucket_owner_full_control;
 
     @Property(description = "KMS key to use for enabling KMS server-side encryption (SSE-KMS) for S3 (optional).",
-            systemProperty = "jgroups.aws.s3.kms_key_id",
+            systemProperty = {"jgroups.aws.s3.kms_key_id", "JGROUPS_AWS_S3_KMS_KEY_ID"},
             exposeAsManagedAttribute = false)
     protected String kms_key_id;
 
