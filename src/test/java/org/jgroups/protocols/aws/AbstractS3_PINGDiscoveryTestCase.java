@@ -58,6 +58,7 @@ public abstract class AbstractS3_PINGDiscoveryTestCase {
     /**
      * Test for legacy protocol name (NATIVE_S3_PING).
      */
+    @SuppressWarnings("deprecation")
     @Test
     public void testLegacyDiscovery() throws Exception {
         discover(RANDOM_CLUSTER_NAME, NATIVE_S3_PING.class.getSimpleName());

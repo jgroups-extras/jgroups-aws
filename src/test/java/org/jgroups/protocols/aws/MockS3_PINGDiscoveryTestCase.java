@@ -49,13 +49,16 @@ public class MockS3_PINGDiscoveryTestCase extends AbstractS3_PINGDiscoveryTestCa
         s3Mock = new S3MockContainer("latest");
         s3Mock.start();
 
-        // TODO workaround using S3MockContainer#getHttpEndpoint() by an IP address so it doesn't rely on spoofing DNS records
-        System.setProperty("org.jgroups.aws.endpoint", "http://127.0.0.1:" + s3Mock.getHttpServerPort());
+        // Configure the protocol - it has no hardcoded values in the stack xml file, so we can set all values using properties
+        // TODO workaround using S3MockContainer#getHttpsEndpoint() by an IP address so it doesn't rely on spoofing DNS records
+        // TODO switch to TLS
+        System.setProperty("jgroups.aws.s3.endpoint", "http://127.0.0.1:" + s3Mock.getHttpServerPort());
+        System.setProperty("jgroups.aws.s3.region_name", "ping-testing-region");
+        System.setProperty("jgroups.aws.s3.bucket_name", "ping-test-bucket");
 
         // Setup fake credentials against the mock service
         System.setProperty("aws.accessKeyId", "foo");
         System.setProperty("aws.secretAccessKey", "bar");
-        System.setProperty("S3_PING_BUCKET_NAME", "testing-ping");
     }
 
     @AfterClass

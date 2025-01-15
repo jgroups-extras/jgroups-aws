@@ -15,7 +15,7 @@
   -->
 
 <!--
-  Formatted copy of the original jgroups-5.2.2.Final.jar!/tcp.xml reconfigured to use NATIVE_S3_PING and disabled diagnostics.
+  Formatted copy of the original jgroups-5.3.13.Final.jar!/tcp.xml reconfigured to use NATIVE_S3_PING and disabled diagnostics.
 -->
 
 <!--
@@ -36,27 +36,24 @@
          thread_pool.max_threads="200"
          thread_pool.keep_alive_time="30000"
          diag.enabled="false"/>
-    <RED/>
-    <org.jgroups.aws.s3.NATIVE_S3_PING region_name="${S3_PING_REGION_NAME:eu-central-1}"
-                                       bucket_name="${S3_PING_BUCKET_NAME}"
-                                       endpoint="${org.jgroups.aws.endpoint}"
-    />
-    <MERGE3 min_interval="10000"
-            max_interval="30000"/>
+    <NON_BLOCKING_SENDS/>
+    <org.jgroups.aws.s3.NATIVE_S3_PING/>
+    <MERGE3 min_interval="10s"
+            max_interval="30s"/>
     <FD_SOCK2/>
-    <FD_ALL3 timeout="40000"
-             interval="5000"/>
-    <VERIFY_SUSPECT2 timeout="1500"/>
+    <FD_ALL3 timeout="40s"
+             interval="5s"/>
+    <VERIFY_SUSPECT2 timeout="1.5s"/>
     <BARRIER/>
     <pbcast.NAKACK2 use_mcast_xmit="false"/>
     <UNICAST3/>
-    <pbcast.STABLE desired_avg_gossip="50000"
+    <pbcast.STABLE desired_avg_gossip="50s"
                    max_bytes="4M"/>
     <pbcast.GMS print_local_addr="true"
-                join_timeout="2000"/>
-    <UFC max_credits="2M"
+                join_timeout="2s"/>
+    <MFC max_credits="10M"
          min_threshold="0.4"/>
-    <MFC max_credits="2M"
+    <UFC max_credits="10M"
          min_threshold="0.4"/>
     <FRAG2 frag_size="60K"/>
     <pbcast.STATE_TRANSFER/>
