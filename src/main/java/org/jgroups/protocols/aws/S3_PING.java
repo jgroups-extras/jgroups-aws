@@ -99,6 +99,7 @@ public class S3_PING extends FILE_PING {
                                                                + " to short. Using default magic number " + JGROUPS_PROTOCOL_DEFAULT_MAGIC_NUMBER);
             }
         }
+        //noinspection deprecation
         ClassConfigurator.addProtocol(magicNumber, NATIVE_S3_PING.class);
         ClassConfigurator.addProtocol(++magicNumber, S3_PING.class);
     }
