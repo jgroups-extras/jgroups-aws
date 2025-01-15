@@ -37,7 +37,7 @@ public class MockS3_PINGDiscoveryTestCase extends AbstractS3_PINGDiscoveryTestCa
     @BeforeClass
     public static void setUp() {
         // If credentials are available, we can conditionally skip Mock tests
-        if (isGenuineCredentialsAvailable() || (!isDockerAvailable() && !Util.checkForLinux())) {
+        if (areGenuineCredentialsAvailable() || (!isDockerAvailable() && !Util.checkForLinux())) {
             Assume.assumeTrue("Podman/Docker environment is not available - skipping tests against S3 mock service.", isDockerAvailable());
         } else if (!isDockerAvailable()) {
             fail("Credentials are not provided, thus Podman/Docker on Linux is required to run tests against a mock service!");
