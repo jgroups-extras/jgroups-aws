@@ -50,6 +50,15 @@ public abstract class AbstractS3_PINGDiscoveryTestCase {
     }
 
     @Test
+    public void testDiscoveryWithBucketPrefix() throws Exception {
+        String bucketPrefixProperty = "jgroups.aws.s3.bucket_prefix";
+
+        System.setProperty(bucketPrefixProperty, "my-other-test-prefix");
+        discover(RANDOM_CLUSTER_NAME, S3_PING.class.getSimpleName());
+        System.clearProperty(bucketPrefixProperty);
+    }
+
+    @Test
     public void testDiscoveryObscureClusterName() throws Exception {
         String obscureClusterName = "``\\//--+ěščřžýáíé==''!@#$%^&*()_{}<>?";
         discover(obscureClusterName + RANDOM_CLUSTER_NAME, S3_PING.class.getSimpleName());
