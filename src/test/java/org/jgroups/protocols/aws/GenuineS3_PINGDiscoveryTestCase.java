@@ -28,6 +28,6 @@ public class GenuineS3_PINGDiscoveryTestCase extends AbstractS3_PINGDiscoveryTes
 
     @BeforeClass
     public static void assumeCredentials() {
-        Assume.assumeTrue("Credentials are not available, test will be ignored!", isGenuineCredentialsAvailable());
+        Assume.assumeTrue("Credentials are not available, test will be ignored!", areGenuineCredentialsAvailable());
     }
 }

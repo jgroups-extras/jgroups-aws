@@ -36,6 +36,8 @@ You can overwrite this by setting the system property `s3ping.magic_number` to d
 
 === Configurations Properties
 
+// n.b. The order of the following list here is by relevance and related/coupled properties are also grouped.
+
 [align="left",cols="3,1,10",options="header"]
 |===
 | Attribute Name +
@@ -48,59 +50,63 @@ Environment variable
 System property: `jgroups.aws.s3.region_name` +
 Environment variable: `JGROUPS_AWS_S3_REGION_NAME`
 | *required*
-| The S3 region to use.
+| The AWS region with which to communicate.
 
 | `bucket_name` +
 System property: `jgroups.aws.s3.bucket_name` +
 Environment variable: `JGROUPS_AWS_S3_BUCKET_NAME`
 | *required*
-| The S3 bucket to use.
+| The AWS S3 bucket name to use.
 
 | `bucket_prefix` +
 System property: `jgroups.aws.s3.bucket_prefix` +
 Environment variable: `JGROUPS_AWS_S3_BUCKET_PREFIX`
 |
-| The S3 bucket prefix to use (optional e.g. 'jgroups/').
-
+| The prefix to prefix all AWS S3 paths with, e.g. `jgroups/`.
 
 | `check_if_bucket_exists` +
 System property: `jgroups.aws.s3.check_if_bucket_exists` +
 Environment variable: `JGROUPS_AWS_S3_CHECK_IF_BUCKET_EXISTS`
 | `true`
-| Checks if the bucket exists in S3 and creates a new one if missing
+| Whether to check if the bucket exists in AWS S3 and create a new one if it does not exist yet.
 
 | `endpoint` +
 System property: `jgroups.aws.s3.endpoint` +
 Environment variable: `JGROUPS_AWS_S3_ENDPOINT`
 |
-| The S3 endpoint to use (optional).
+| The AWS endpoint with which to communicate.
 
 | `path_style_access_enabled` +
 System property: `jgroups.aws.s3.path_style_access_enabled` +
 Environment variable: `JGROUPS_AWS_S3_PATH_STYLE_ACCESS_ENABLED`
 | `false`
-| The S3 path-style enable (optional).
+| Forces the AWS S3 client to use path-style addressing for buckets.
 
 | `kms_key_id` +
 System property: `jgroups.aws.s3.kms_key_id` +
 Environment variable: `JGROUPS_AWS_S3_KMS_KEY_ID`
 |
-| Use kms encryption with s3 with the given kms key (optionally - enables KMS Server side encryption (SSE-KMS) using the given kms key)
+| KMS key to use for enabling KMS server-side encryption (SSE-KMS) for AWS S3.
 
 | `acl_grant_bucket_owner_full_control` +
 System property: `jgroups.aws.s3.acl_grant_bucket_owner_full_control` +
 Environment variable: `JGROUPS_AWS_S3_ACL_GRANT_BUCKET_OWNER_FULL_CONTROL`
 | `false`
-| Flag indicating whether or not to grant the bucket owner full control over the bucket on each update. This is useful in multi-region deployments where each region exists in its own AWS account.
+| Whether to grant the bucket owner full control over the bucket on each update. This is useful in multi-region deployments where each region exists in its own AWS account.
 
 |===
 
 NOTE: System properties are supported since JGroups AWS release version 3.0.1.Final.
-      To use properties in the previous version, the property must be explicitly defined in the configuration.
+      To use properties in the previous version, the property must be explicitly defined in the configuration, e.g. `<aws.S3_PING region_name="eu-central-1" ... />"`.
+
+NOTE: Be mindful of how JGroups resolves values at runtime when using system properties or environment variables.
+      For example, consider the configuration `<aws.S3_PING bucket_name="${my.bucket.property:myBucketDefaultValue}" ... />`.
+      JGroups will first attempt to resolve the `my.bucket.property` property.
+      If it is not defined, the default value `myBucketDefaultValue` will be used.
+      If no default value is specified, JGroups will then attempt to resolve `jgroups.aws.s3.bucket_name` system property,
+      followed by the environment variable `JGROUPS_AWS_S3_BUCKET_NAME`.
 
 === Example Stack
-
-// TODO update the sample protocol stack with jgroups 5.3.x default
 
 [source,xml]
 ----
@@ -156,7 +162,7 @@ declare -x JGROUPS_AWS_S3_BUCKET_NAME="jgroups"
 mvn verify
 ----
 
-If any of the required properties are not specified tests will be skipped (uses `org.junit.Assume`).
+If the required AWS credentials are not specified, testing with AWS S3 will be skipped (uses `org.junit.Assume`).
 
 In case credentials are not provided and running on Linux, tests will be run against mock containerized S3 instance.
 These require a functioning podman or Docker environment.

@@ -40,13 +40,22 @@ public abstract class AbstractS3_PINGDiscoveryTestCase {
     // credentials (e.g. running JDK8 and JDK9 on the CI).
     public static final String RANDOM_CLUSTER_NAME = UUID.randomUUID().toString();
 
-    static boolean isGenuineCredentialsAvailable() {
-        return System.getenv("AWS_ACCESS_KEY_ID") != null && System.getenv("AWS_SECRET_ACCESS_KEY") != null && System.getenv("S3_PING_BUCKET_NAME") != null;
+    static boolean areGenuineCredentialsAvailable() {
+        return System.getenv("AWS_ACCESS_KEY_ID") != null && System.getenv("AWS_SECRET_ACCESS_KEY") != null;
     }
 
     @Test
     public void testDiscovery() throws Exception {
         discover(RANDOM_CLUSTER_NAME, S3_PING.class.getSimpleName());
+    }
+
+    @Test
+    public void testDiscoveryWithBucketPrefix() throws Exception {
+        String bucketPrefixProperty = "jgroups.aws.s3.bucket_prefix";
+
+        System.setProperty(bucketPrefixProperty, "my-other-test-prefix");
+        discover(RANDOM_CLUSTER_NAME, S3_PING.class.getSimpleName());
+        System.clearProperty(bucketPrefixProperty);
     }
 
     @Test
