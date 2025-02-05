@@ -9,7 +9,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <jgroups.version>5.3.13.Final</jgroups.version>
+        <jgroups.version>5.4.2.Final</jgroups.version>
         <!-- https://mvnrepository.com/artifact/software.amazon.awssdk/bom -->
         <aws.version>2.30.0</aws.version>
         <nexus.server.id>jboss-releases-repository</nexus.server.id>
