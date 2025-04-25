@@ -43,10 +43,10 @@ public class MockS3_PINGDiscoveryTestCase extends AbstractS3_PINGDiscoveryTestCa
             fail("Credentials are not provided, thus Podman/Docker on Linux is required to run tests against a mock service!");
         }
 
-        // Note that referring to rolling 'latest' here, a new release might break (e.g. like version 3.3.0 did) in which case,
-        // the version must be explicitly downgraded here.
+        // Using 'latest' here often breaks the tests (e.g. like version 3.3.0 did).
+        // In that case the version will have to be explicitly managed here for reproducible builds/CI.
         // n.b. for reference https://hub.docker.com/r/adobe/s3mock/tags
-        s3Mock = new S3MockContainer("latest");
+        s3Mock = new S3MockContainer("3.12.0");
         s3Mock.start();
 
         // Configure the protocol - it has no hardcoded values in the stack xml file, so we can set all values using properties
