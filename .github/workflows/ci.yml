@@ -13,10 +13,17 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ ubuntu-latest, windows-latest, macos-latest ]
+        os:
+          - macos-latest
+          - ubuntu-latest
+          - windows-latest
         # Keep this list as: all supported LTS JDKs, the latest GA JDK, and optionally the latest EA JDK (if available).
-        # https://www.oracle.com/java/technologies/java-se-support-roadmap.html
-        java: [ 11, 17, 21, 23 ]
+        # Reference: https://adoptium.net/support/
+        java:
+          - 11
+          - 17
+          - 21
+          - 24
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -27,4 +34,4 @@ jobs:
           java-version: ${{ matrix.java }}
           cache: maven
       - name: Build with Maven
-        run: mvn --batch-mode --no-transfer-progress verify
+        run: mvn --batch-mode --no-transfer-progress clean verify
