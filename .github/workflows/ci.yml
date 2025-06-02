@@ -24,6 +24,7 @@ jobs:
           - 17
           - 21
           - 24
+          - 25-ea
     steps:
       - name: Checkout
         uses: actions/checkout@v4
