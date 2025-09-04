@@ -19,6 +19,8 @@ import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.S3ClientBuilder;
+import software.amazon.awssdk.services.s3.model.BucketAlreadyExistsException;
+import software.amazon.awssdk.services.s3.model.BucketAlreadyOwnedByYouException;
 import software.amazon.awssdk.services.s3.model.CreateBucketRequest;
 import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
 import software.amazon.awssdk.services.s3.model.GetObjectRequest;
@@ -143,7 +145,12 @@ public class S3_PING extends FILE_PING {
         if (!bucket_exists) {
             log.info("Bucket '%s' does not exist, creating it.", bucket_name);
             CreateBucketRequest createBucketRequest = CreateBucketRequest.builder().bucket(bucket_name).build();
-            s3Client.createBucket(createBucketRequest);
+            try {
+                s3Client.createBucket(createBucketRequest);
+            } catch (BucketAlreadyExistsException | BucketAlreadyOwnedByYouException exception) {
+                log.info("Attempted to create bucket '%s' but it already exists.", bucket_name);
+                return;
+            }
             log.info("Created bucket '%s'.", bucket_name);
         } else {
             log.info("Found bucket '%s'.", bucket_name);
