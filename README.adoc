@@ -159,7 +159,7 @@ declare -x AWS_ACCESS_KEY_ID="qF7ujVAaYUp3Tx7m"
 declare -x AWS_SECRET_ACCESS_KEY="WzbG3R2KGtx5rsHQUx2PKQPS2f6WzMtf"
 declare -x JGROUPS_AWS_S3_REGION_NAME="eu-central-1"
 declare -x JGROUPS_AWS_S3_BUCKET_NAME="jgroups"
-mvn verify
+./mvnw verify
 ----
 
 If the required AWS credentials are not specified, testing with AWS S3 will be skipped (uses `org.junit.Assume`).
