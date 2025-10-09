@@ -20,6 +20,8 @@
         <maven.compiler.release>8</maven.compiler.release>
         <jdk.min.version>11</jdk.min.version>
         <nexus.staging.tag>${project.groupId}-${project.version}</nexus.staging.tag>
+        <!-- Temporary version bump of the nxrm3 plugin until jboss-parent catches up -->
+        <version.nxrm3.plugin>1.0.13</version.nxrm3.plugin>
 
         <!-- https://mvnrepository.com/artifact/org.jgroups/jgroups -->
         <jgroups.version>5.3.21.Final</jgroups.version>
