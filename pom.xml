@@ -78,8 +78,6 @@
         <url>https://github.com/jgroups-extras/jgroups-aws/issues</url>
     </issueManagement>
 
-
-
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -150,6 +148,13 @@
                         <jgroups.use.jdk_logger>true</jgroups.use.jdk_logger>
                         <java.util.logging.config.file>src/test/resources/logging.properties</java.util.logging.config.file>
                     </systemPropertyVariables>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <configuration>
+                    <arguments>-DskipTests</arguments>
                 </configuration>
             </plugin>
         </plugins>
