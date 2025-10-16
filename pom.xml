@@ -21,7 +21,7 @@
         <nexus.staging.tag>${project.groupId}-${project.version}</nexus.staging.tag>
 
         <!-- https://mvnrepository.com/artifact/org.jgroups/jgroups -->
-        <jgroups.version>5.4.11.Final</jgroups.version>
+        <jgroups.version>5.5.0.Final</jgroups.version>
         <!-- https://mvnrepository.com/artifact/software.amazon.awssdk/bom -->
         <aws.version>2.36.3</aws.version>
     </properties>
