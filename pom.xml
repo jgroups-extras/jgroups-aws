@@ -21,10 +21,11 @@
         <jdk.min.version>11</jdk.min.version>
         <nexus.staging.tag>${project.groupId}-${project.version}</nexus.staging.tag>
         <!-- Temporary version bump of the nxrm3 plugin until jboss-parent catches up -->
+        <!-- https://central.sonatype.com/artifact/org.sonatype.plugins/nxrm3-maven-plugin/versions -->
         <version.nxrm3.plugin>1.0.13</version.nxrm3.plugin>
 
         <!-- https://mvnrepository.com/artifact/org.jgroups/jgroups -->
-        <jgroups.version>5.3.21.Final</jgroups.version>
+        <jgroups.version>5.4.11.Final</jgroups.version>
         <!-- https://mvnrepository.com/artifact/software.amazon.awssdk/bom -->
         <aws.version>2.35.2</aws.version>
     </properties>
