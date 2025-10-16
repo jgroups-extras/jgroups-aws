@@ -16,7 +16,7 @@ The benefit is a more stable connection as well as usage of IAM server profiles 
 <dependency>
     <groupId>org.jgroups.aws</groupId>
     <artifactId>jgroups-aws</artifactId>
-    <version>3.0.1.Final</version>
+    <version>3.1.0.Final</version>
 </dependency>
 ----
 
@@ -176,9 +176,11 @@ https://github.com/jgroups-extras/jgroups-aws/issues
 == Support Matrix
 
 |===
-|Version (branch) |JGroups version |AWS SDK
+|Version/Branch |JGroups Version |AWS SDK Version |Base JDK Version
 
-|`3.x` (`main`) |5.2.x - 5.3.x |2.x
-|`2.x` |5.2.x |1.x
-|`1.x` |4.2.x |1.x
+|`4.x`/`main` |`5.5.x`           |`2.x` |17
+|`3.1.x`      |`5.4.x`           |`2.x` |11
+|`3.0.x`      |`5.2.x` – `5.3.x` |`2.x` |11
+|`2.x`        |`5.2.x`           |`1.x` |11
+|`1.x`        |`4.2.x`           |`1.x` |8
 |===
