@@ -1,7 +1,7 @@
 :toc:
 = JGroups AWS – `aws.S3_PING` image:https://github.com/jgroups-extras/jgroups-aws/workflows/CI/badge.svg[CI,link=https://github.com/jgroups-extras/jgroups-aws/actions] image:https://img.shields.io/maven-central/v/org.jgroups.aws/jgroups-aws?logo=apache-maven[Version,link=https://central.sonatype.com/artifact/org.jgroups.aws/jgroups-aws]
 
-Projects JGroups AWS provides an implementation of `S3_PING` discovery protocol using AWS S3 buckets as cluster information store.
+Projects JGroups AWS provides an implementation of `aws.S3_PING` discovery protocol using AWS S3 buckets as cluster information store.
 It is based on the original code written by Tobias Sarnowski at Zalando.
 footnote:[https://libraries.io/github/zalando/jgroups-native-s3-ping]
 footnote:[https://github.com/jwegne/jgroups-native-s3-ping]
