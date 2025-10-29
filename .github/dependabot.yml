@@ -10,10 +10,6 @@ updates:
       # https://mvnrepository.com/artifact/software.amazon.awssdk/bom
       - dependency-name: software.amazon.awssdk:bom
         update-types: [ version-update:semver-patch ]
-      # The s3mock-testcontainers version since 3.x requires JDK 17 for runtime
-      # We ignore until we move the baseline ourselves to JDK 17
-      - dependency-name: com.adobe.testing:s3mock-testcontainers
-        versions: [ ">= 3" ]
   - package-ecosystem: github-actions
     directory: "/"
     schedule:

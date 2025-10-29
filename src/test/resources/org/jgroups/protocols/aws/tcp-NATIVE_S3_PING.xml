@@ -1,5 +1,5 @@
 <!--
-  ~ Copyright 2022 Red Hat Inc., and individual contributors
+  ~ Copyright 2025 Red Hat Inc., and individual contributors
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
   ~ you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
   -->
 
 <!--
-  Formatted copy of the original jgroups-5.4.11.Final.jar!/tcp.xml reconfigured to use NATIVE_S3_PING and disabled diagnostics.
+  Formatted copy of the original jgroups-5.5.0.Final.jar!/tcp.xml reconfigured to use NATIVE_S3_PING.
 -->
 
 <!--
@@ -27,13 +27,8 @@
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xmlns="urn:org:jgroups"
-        xsi:schemaLocation="urn:org:jgroups http://www.jgroups.org/schema/jgroups-5.4.xsd">
-    <TCP bind_addr="${jgroups.bind_addr:site_local}"
-         bind_port="${jgroups.bind_port:7800}"
-         thread_pool.min_threads="0"
-         thread_pool.max_threads="200"
-         thread_pool.keep_alive_time="30000"/>
-    <NON_BLOCKING_SENDS/>
+        xsi:schemaLocation="urn:org:jgroups http://www.jgroups.org/schema/jgroups-5.5.xsd">
+    <include file="${transport-config:tcp-default.xml}"/>
     <org.jgroups.aws.s3.NATIVE_S3_PING/>
     <MERGE3 min_interval="10s"
             max_interval="30s"/>
