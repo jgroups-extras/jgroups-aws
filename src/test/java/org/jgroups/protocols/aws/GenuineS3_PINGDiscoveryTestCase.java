@@ -16,8 +16,9 @@
 
 package org.jgroups.protocols.aws;
 
-import org.junit.Assume;
-import org.junit.BeforeClass;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
+
+import org.junit.jupiter.api.BeforeAll;
 
 /**
  * Tests against genuine S3 endpoint requiring credentials.
@@ -26,8 +27,8 @@ import org.junit.BeforeClass;
  */
 public class GenuineS3_PINGDiscoveryTestCase extends AbstractS3_PINGDiscoveryTestCase {
 
-    @BeforeClass
+    @BeforeAll
     public static void assumeCredentials() {
-        Assume.assumeTrue("Credentials are not available, test will be ignored!", areGenuineCredentialsAvailable());
+        assumeTrue(areGenuineCredentialsAvailable(), "Credentials are not available, test will be ignored!");
     }
 }
