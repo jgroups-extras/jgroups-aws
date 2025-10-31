@@ -16,14 +16,14 @@
 
 package org.jgroups.protocols.aws;
 
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
+
 import com.adobe.testing.s3mock.testcontainers.S3MockContainer;
 import org.jgroups.util.Util;
-import org.junit.AfterClass;
-import org.junit.Assume;
-import org.junit.BeforeClass;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.testcontainers.DockerClientFactory;
-
-import static org.junit.Assert.fail;
 
 /**
  * Tests against a containerized mock S3 service.
@@ -34,11 +34,11 @@ public class MockS3_PINGDiscoveryTestCase extends AbstractS3_PINGDiscoveryTestCa
 
     private static S3MockContainer s3Mock;
 
-    @BeforeClass
+    @BeforeAll
     public static void setUp() {
         // If credentials are available, we can conditionally skip Mock tests
         if (areGenuineCredentialsAvailable() || (!isDockerAvailable() && !Util.checkForLinux())) {
-            Assume.assumeTrue("Podman/Docker environment is not available - skipping tests against S3 mock service.", isDockerAvailable());
+            assumeTrue(isDockerAvailable(), "Podman/Docker environment is not available - skipping tests against S3 mock service.");
         } else if (!isDockerAvailable()) {
             fail("Credentials are not provided, thus Podman/Docker on Linux is required to run tests against a mock service!");
         }
@@ -61,7 +61,7 @@ public class MockS3_PINGDiscoveryTestCase extends AbstractS3_PINGDiscoveryTestCa
         System.setProperty("aws.secretAccessKey", "bar");
     }
 
-    @AfterClass
+    @AfterAll
     public static void cleanup() {
         if (s3Mock != null) {
             s3Mock.stop();

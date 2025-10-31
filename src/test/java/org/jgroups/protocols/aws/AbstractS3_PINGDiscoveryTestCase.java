@@ -16,6 +16,8 @@
 
 package org.jgroups.protocols.aws;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
@@ -24,8 +26,7 @@ import java.util.concurrent.TimeUnit;
 import org.jgroups.JChannel;
 import org.jgroups.aws.s3.NATIVE_S3_PING;
 import org.jgroups.util.Util;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Functional tests for S3_PING discovery.
@@ -82,7 +83,7 @@ public abstract class AbstractS3_PINGDiscoveryTestCase {
 
         // Asserts the views are there
         for (JChannel channel : channels) {
-            Assert.assertEquals("member count", CHANNEL_COUNT, channel.getView().getMembers().size());
+            assertEquals(CHANNEL_COUNT, channel.getView().getMembers().size(), "member count");
         }
 
         // Stop all channels
