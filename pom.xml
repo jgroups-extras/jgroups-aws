@@ -23,7 +23,7 @@
         <!-- https://mvnrepository.com/artifact/org.jgroups/jgroups -->
         <jgroups.version>5.5.0.Final</jgroups.version>
         <!-- https://mvnrepository.com/artifact/software.amazon.awssdk/bom -->
-        <aws.version>2.37.1</aws.version>
+        <aws.version>2.38.1</aws.version>
     </properties>
 
     <description>Discovery protocol for JGroups using AWS S3 buckets as cluster information store</description>
