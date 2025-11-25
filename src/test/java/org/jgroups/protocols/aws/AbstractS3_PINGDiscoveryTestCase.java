@@ -24,7 +24,6 @@ import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 import org.jgroups.JChannel;
-import org.jgroups.aws.s3.NATIVE_S3_PING;
 import org.jgroups.util.Util;
 import org.junit.jupiter.api.Test;
 
@@ -63,15 +62,6 @@ public abstract class AbstractS3_PINGDiscoveryTestCase {
     public void testDiscoveryObscureClusterName() throws Exception {
         String obscureClusterName = "``\\//--+ěščřžýáíé==''!@#$%^&*()_{}<>?";
         discover(obscureClusterName + RANDOM_CLUSTER_NAME, S3_PING.class.getSimpleName());
-    }
-
-    /**
-     * Test for legacy protocol name (NATIVE_S3_PING).
-     */
-    @SuppressWarnings("deprecation")
-    @Test
-    public void testLegacyDiscovery() throws Exception {
-        discover(RANDOM_CLUSTER_NAME, NATIVE_S3_PING.class.getSimpleName());
     }
 
     private void discover(String clusterName, String stackName) throws Exception {

@@ -6,7 +6,6 @@ import java.util.List;
 
 import org.jgroups.Address;
 import org.jgroups.annotations.Property;
-import org.jgroups.aws.s3.NATIVE_S3_PING;
 import org.jgroups.conf.ClassConfigurator;
 import org.jgroups.logging.LogFactory;
 import org.jgroups.protocols.FILE_PING;
@@ -100,8 +99,7 @@ public class S3_PING extends FILE_PING {
                         System.getProperty(MAGIC_NUMBER_SYSTEM_PROPERTY), JGROUPS_PROTOCOL_DEFAULT_MAGIC_NUMBER);
             }
         }
-        //noinspection deprecation
-        ClassConfigurator.addProtocol(magicNumber, NATIVE_S3_PING.class);
+        // n.b. the legacy NATIVE_S3_PING was registered with magic number 789, so the increment is intentional.
         ClassConfigurator.addProtocol(++magicNumber, S3_PING.class);
     }
 
