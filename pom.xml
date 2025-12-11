@@ -54,6 +54,9 @@
                 <role>developer</role>
                 <role>maintainer</role>
             </roles>
+            <url>https://github.com/rhusar</url>
+            <organization>IBM</organization>
+            <organizationUrl>https://www.ibm.com</organizationUrl>
         </developer>
     </developers>
 

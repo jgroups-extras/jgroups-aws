@@ -1,12 +1,11 @@
-:toc:
 = JGroups AWS – `aws.S3_PING` image:https://github.com/jgroups-extras/jgroups-aws/workflows/CI/badge.svg[CI,link=https://github.com/jgroups-extras/jgroups-aws/actions] image:https://img.shields.io/maven-central/v/org.jgroups.aws/jgroups-aws?logo=apache-maven[Version,link=https://central.sonatype.com/artifact/org.jgroups.aws/jgroups-aws]
 
-Projects JGroups AWS provides an implementation of `aws.S3_PING` discovery protocol using AWS S3 buckets as cluster information store.
-It is based on the original code written by Tobias Sarnowski at Zalando.
-footnote:[https://libraries.io/github/zalando/jgroups-native-s3-ping]
-footnote:[https://github.com/jwegne/jgroups-native-s3-ping]
+:toc:
 
-It uses the official AWS SDK footnote:[http://docs.aws.amazon.com/AmazonS3/latest/dev/UsingTheMPDotJavaAPI.html] and does not implement the HTTP protocol on its own.
+Projects JGroups AWS provides an implementation of `aws.S3_PING` discovery protocol using AWS S3 buckets as cluster information store.
+It is based on the https://github.com/jwegne/jgroups-native-s3-ping[original code] written by Tobias Sarnowski at Zalando.
+
+It uses the https://docs.aws.amazon.com/s3/[official AWS SDK] and does not implement the HTTP protocol on its own.
 The benefit is a more stable connection as well as usage of IAM server profiles and AWS standardized credential distribution.
 
 == Maven Coordinates
@@ -29,10 +28,6 @@ This library implements a JGroups discovery protocol which replaces protocols li
 <aws.S3_PING region_name="us-east-1a"
              bucket_name="jgroups-s3-test"/>
 ----
-
-// TODO: move this to configuration with other props
-The `aws.S3_PING` automatically registers itself to JGroups with the magic number `789`.
-You can overwrite this by setting the system property `s3ping.magic_number` to different number, e.g. `-Ds3ping.magic_number=123`.
 
 === Configurations Properties
 
@@ -94,6 +89,10 @@ Environment variable: `JGROUPS_AWS_S3_ACL_GRANT_BUCKET_OWNER_FULL_CONTROL`
 | `false`
 | Whether to grant the bucket owner full control over the bucket on each update. This is useful in multi-region deployments where each region exists in its own AWS account.
 
+| System property: `s3ping.magic_number`
+| `790`
+| The protocol automatically registers itself to JGroups with the magic number `790`. This can be overwritten by setting the system property to different number.
+
 |===
 
 NOTE: System properties are supported since JGroups AWS release version 3.0.1.Final.
@@ -147,8 +146,8 @@ along with setting the region name and a bucket name.
 
 [source,shell]
 ----
-declare -x AWS_ACCESS_KEY_ID="qF7ujVAaYUp3Tx7m"
-declare -x AWS_SECRET_ACCESS_KEY="WzbG3R2KGtx5rsHQUx2PKQPS2f6WzMtf"
+declare -x AWS_ACCESS_KEY_ID="..."
+declare -x AWS_SECRET_ACCESS_KEY="..."
 declare -x JGROUPS_AWS_S3_REGION_NAME="eu-central-1"
 declare -x JGROUPS_AWS_S3_BUCKET_NAME="jgroups"
 ./mvnw verify
