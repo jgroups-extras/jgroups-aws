@@ -1,4 +1,5 @@
 # Adaptation of https://raw.githubusercontent.com/wildfly/wildfly/refs/heads/main/.github/workflows/dep-diff-pull_request.yml
+# Changes: change module to root, remove additional modules to check/steps/variables
 
 name: Dependency Tree Input Builder
 # To deal with https://securitylab.github.com/research/github-actions-preventing-pwn-requests
@@ -10,6 +11,9 @@ on:
       - main
     paths:
       - "**/pom.xml"
+env:
+  # The modules to check for dependencies. If there is more than one they are comma separated
+  MODULES_TO_CHECK: /
 jobs:
   check:
     runs-on: ubuntu-latest
@@ -74,25 +78,6 @@ jobs:
           echo "validBaseModules="$validBaseModules
           echo "validBaseModules=${validBaseModules}" >> $GITHUB_ENV
 
-      - name: Find valid base additional modules
-        working-directory: base
-        run: |
-          i=0
-          validAddlBaseModules=""
-          for module in $(echo "${ADDITIONAL_BUILD_MODULES}" | sed "s/,/ /g")
-          do
-            if [ -d ${module} ]; then
-              if [ $i -gt 0 ]; then
-                validAddlBaseModules="${validAddlBaseModules},${module}"
-              else
-                validAddlBaseModules="${module}"
-              fi
-              i=$((i + 1))
-            fi
-          done
-          echo "validAddlBaseModules="validAddlBaseModules
-          echo "validAddlBaseModules=${validAddlBaseModules}" >> $GITHUB_ENV
-
       - name: Find valid PR modules to check
         working-directory: pr
         run: |
@@ -112,29 +97,10 @@ jobs:
           echo "validPRModules="$validPRModules
           echo "validPRModules=${validPRModules}" >> $GITHUB_ENV
 
-      - name: Find valid pr additional modules
-        working-directory: pr
-        run: |
-          i=0
-          validAddlPRModules=""
-          for module in $(echo "${ADDITIONAL_BUILD_MODULES}" | sed "s/,/ /g")
-          do
-            if [ -d ${module} ]; then
-              if [ $i -gt 0 ]; then
-                validAddlPRModules="${validAddlPRModules},${module}"
-              else
-                validAddlPRModules="${module}"
-              fi
-              i=$((i + 1))
-            fi
-          done
-          echo "validAddlPRModules="validAddlPRModules
-          echo "validAddlPRModules=${validAddlPRModules}" >> $GITHUB_ENV
-
       - name: Build base
         working-directory: base
         run: |
-          mvn -B -ntp install -DskipTests -pl ${{ env.validBaseModules }},${{ env.validAddlBaseModules }} -am
+          mvn -B -ntp install -DskipTests -pl ${{ env.validBaseModules }} -am
 
       - name: Grab base dependencies
         id: base-versions
@@ -161,7 +127,7 @@ jobs:
         run: |
           echo "validPRModules="$validPRModules
           echo "env.validPRModules="${{ env.validPRModules }}
-          mvn -B -ntp install -DskipTests -pl ${{ env.validPRModules }},${{ env.validAddlPRModules }} -am
+          mvn -B -ntp install -DskipTests -pl ${{ env.validPRModules }} -am
 
       - name: Grab PR Dependencies
         working-directory: pr
