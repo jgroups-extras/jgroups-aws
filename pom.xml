@@ -12,7 +12,7 @@
     <artifactId>jgroups-aws</artifactId>
     <packaging>jar</packaging>
     <name>JGroups - AWS</name>
-    <version>4.0.0.Final-SNAPSHOT</version>
+    <version>4.0.0.Final</version>
     <url>https://www.github.com/jgroups-extras/jgroups-aws</url>
 
     <properties>
@@ -72,7 +72,7 @@
         <connection>scm:git:git://github.com/jgroups-extras/jgroups-aws.git</connection>
         <developerConnection>scm:git:ssh://git@github.com/jgroups-extras/jgroups-aws.git</developerConnection>
         <url>https://github.com/jgroups-extras/jgroups-aws</url>
-        <tag>HEAD</tag>
+        <tag>4.0.0.Final</tag>
     </scm>
 
     <issueManagement>
