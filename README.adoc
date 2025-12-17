@@ -153,7 +153,7 @@ declare -x JGROUPS_AWS_S3_BUCKET_NAME="jgroups"
 ./mvnw verify
 ----
 
-If the required AWS credentials are not specified, testing with AWS S3 will be skipped (uses `org.junit.Assume`).
+If the required AWS credentials are not specified, testing with AWS S3 will be skipped (uses `org.junit.jupiter.api.Assumptions`).
 
 In case credentials are not provided and running on Linux, tests will be run against mock containerized S3 instance.
 These require a functioning podman or Docker environment.
