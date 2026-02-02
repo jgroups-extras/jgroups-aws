@@ -156,6 +156,14 @@ public class S3_PING extends FILE_PING {
     }
 
     @Override
+    public void destroy() {
+        super.destroy();
+
+        // SdkAutoCloseable does not throw checked exceptions in its close() methods
+        s3Client.close();
+    }
+
+    @Override
     protected void createRootDir() {
         // ignore, bucket has to exist
     }
