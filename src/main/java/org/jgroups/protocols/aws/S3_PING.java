@@ -269,10 +269,10 @@ public class S3_PING extends FILE_PING {
         String filename=addressToFilename(addr);
         String key=getClusterPrefix(clustername) + filename;
         try {
-            DeleteObjectRequest deleteObjectRequest = DeleteObjectRequest.builder().bucket(bucket_name).key(key).build();
-            s3Client.deleteObject(deleteObjectRequest);
             if(log.isTraceEnabled())
                 log.trace("Removing key '%s'.", key);
+            DeleteObjectRequest deleteObjectRequest = DeleteObjectRequest.builder().bucket(bucket_name).key(key).build();
+            s3Client.deleteObject(deleteObjectRequest);
         }
         catch(Exception e) {
             log.error(Util.getMessage("FailureRemovingData"), e);
