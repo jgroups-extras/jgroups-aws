@@ -19,6 +19,11 @@
         <!-- JBoss Parent overrides -->
         <maven.compiler.release>17</maven.compiler.release>
         <nexus.staging.tag>${project.groupId}-${project.version}</nexus.staging.tag>
+        <!-- maven-release-plugin configuration -->
+        <arguments>-DskipTests</arguments>
+        <!-- Temporarily until Nexus stabilizes keep SCM pushes manual -->
+        <pushChanges>false</pushChanges>
+        <localCheckout>true</localCheckout>
 
         <!-- https://mvnrepository.com/artifact/org.jgroups/jgroups -->
         <jgroups.version>5.5.2.Final</jgroups.version>
