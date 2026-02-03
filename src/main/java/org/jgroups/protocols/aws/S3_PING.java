@@ -116,7 +116,6 @@ public class S3_PING extends FILE_PING {
         S3ClientBuilder builder = S3Client.builder();
         builder.credentialsProvider(DefaultCredentialsProvider.builder().build());
 
-        // TODO Is this meant to replace #withPathStyleAccessEnabled ?
         builder.forcePathStyle(path_style_access_enabled);
 
         Region region = Region.of(region_name);
