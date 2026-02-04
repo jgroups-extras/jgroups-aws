@@ -158,8 +158,13 @@ public class S3_PING extends FILE_PING {
     public void destroy() {
         super.destroy();
 
-        // SdkAutoCloseable does not throw checked exceptions in its close() methods
-        s3Client.close();
+        // Workaround for https://issues.redhat.com/browse/JGRP-2976
+        // In case a shutdown hook was registered, JGroups never deregisters it on stop, so the client must be still
+        // available during JVM shutdown.
+        if (!register_shutdown_hook) {
+            // SdkAutoCloseable does not throw checked exceptions in its close() methods
+            s3Client.close();
+        }
     }
 
     @Override
