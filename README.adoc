@@ -95,6 +95,8 @@ Environment variable: `JGROUPS_AWS_S3_ACL_GRANT_BUCKET_OWNER_FULL_CONTROL`
 
 |===
 
+NOTE: This protocol implementation extends `FILE_PING` and inherits its configuration, however, since version 4.0.1.Final, the `register_shutdown_hook` is set to `false` by default.
+
 NOTE: System properties are supported since JGroups AWS release version 3.0.1.Final.
       To use properties in the previous version, the property must be explicitly defined in the configuration, e.g. `<aws.S3_PING region_name="eu-central-1" ... />"`.
 

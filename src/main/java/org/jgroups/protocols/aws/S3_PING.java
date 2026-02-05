@@ -103,6 +103,13 @@ public class S3_PING extends FILE_PING {
         ClassConfigurator.addProtocol(++magicNumber, S3_PING.class);
     }
 
+    public S3_PING() {
+        super();
+
+        // Disable shutdown hook by default
+        this.register_shutdown_hook = false;
+    }
+
     @Override
     public void init() throws Exception {
         super.init();
