@@ -34,3 +34,10 @@ jobs:
           cache: maven
       - name: Build with Maven
         run: ./mvnw --batch-mode --no-transfer-progress clean verify
+      - name: Upload Test Results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: test-results-${{ matrix.os }}-java-${{ matrix.java }}
+          path: "**/target/surefire-reports/TEST-*.xml"
+          retention-days: 1
