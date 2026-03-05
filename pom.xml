@@ -4,20 +4,23 @@
     <parent>
         <groupId>org.jboss</groupId>
         <artifactId>jboss-parent</artifactId>
-        <version>51</version>
+        <version>52</version>
         <relativePath />
     </parent>
 
     <groupId>org.jgroups.aws</groupId>
     <artifactId>jgroups-aws</artifactId>
-    <packaging>jar</packaging>
-    <name>JGroups - AWS</name>
     <version>4.0.2.Final-SNAPSHOT</version>
+    <packaging>jar</packaging>
+
+    <name>JGroups - AWS</name>
+    <description>Discovery protocol for JGroups using AWS S3 buckets as cluster information store</description>
     <url>https://www.github.com/jgroups-extras/jgroups-aws</url>
 
     <properties>
         <!-- JBoss Parent overrides -->
         <maven.compiler.release>17</maven.compiler.release>
+        <jdk.min.version>${maven.compiler.release}</jdk.min.version>
         <nexus.staging.tag>${project.groupId}-${project.version}</nexus.staging.tag>
         <!-- maven-release-plugin configuration -->
         <arguments>-DskipTests</arguments>
@@ -30,13 +33,6 @@
         <!-- https://mvnrepository.com/artifact/software.amazon.awssdk/bom -->
         <aws.version>2.42.4</aws.version>
     </properties>
-
-    <description>Discovery protocol for JGroups using AWS S3 buckets as cluster information store</description>
-
-    <organization>
-        <name>JBoss, a division of Red Hat</name>
-        <url>https://www.jboss.org/</url>
-    </organization>
 
     <developers>
         <developer>
@@ -84,6 +80,11 @@
         <system>GitHub Issues</system>
         <url>https://github.com/jgroups-extras/jgroups-aws/issues</url>
     </issueManagement>
+
+    <ciManagement>
+        <system>GitHub Actions</system>
+        <url>https://github.com/jgroups-extras/jgroups-aws/actions</url>
+    </ciManagement>
 
     <dependencyManagement>
         <dependencies>
