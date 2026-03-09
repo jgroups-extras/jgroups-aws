@@ -15,7 +15,7 @@ The benefit is a more stable connection as well as usage of IAM server profiles 
 <dependency>
     <groupId>org.jgroups.aws</groupId>
     <artifactId>jgroups-aws</artifactId>
-    <version>4.0.0.Final</version>
+    <version>4.0.1.Final</version>
 </dependency>
 ----
 
