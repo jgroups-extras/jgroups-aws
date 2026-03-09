@@ -29,7 +29,7 @@
         <localCheckout>true</localCheckout>
 
         <!-- https://mvnrepository.com/artifact/org.jgroups/jgroups -->
-        <jgroups.version>5.5.2.Final</jgroups.version>
+        <jgroups.version>5.5.3.Final</jgroups.version>
         <!-- https://mvnrepository.com/artifact/software.amazon.awssdk/bom -->
         <aws.version>2.42.4</aws.version>
     </properties>
