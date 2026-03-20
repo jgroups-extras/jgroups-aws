@@ -95,10 +95,12 @@ Environment variable: `JGROUPS_AWS_S3_ACL_GRANT_BUCKET_OWNER_FULL_CONTROL`
 
 |===
 
+NOTE: The cluster name is used as part of the S3 object key, therefore the https://docs.aws.amazon.com/AmazonS3/latest/userguide/object-keys.html[S3 object key naming restrictions] also apply to the JGroups cluster name when using this protocol.
+
 NOTE: This protocol implementation extends `FILE_PING` and inherits its configuration, however, since version 4.0.1.Final, the `register_shutdown_hook` is set to `false` by default.
 
 NOTE: System properties are supported since JGroups AWS release version 3.0.1.Final.
-      To use properties in the previous version, the property must be explicitly defined in the configuration, e.g. `<aws.S3_PING region_name="eu-central-1" ... />"`.
+      To use properties in the previous version, the property must be explicitly defined in the configuration itself, e.g. `<aws.S3_PING region_name="${jgroups.aws.s3.region_name}" ... />`.
 
 NOTE: Be mindful of how JGroups resolves values at runtime when using system properties or environment variables.
       For example, consider the configuration `<aws.S3_PING bucket_name="${my.bucket.property:myBucketDefaultValue}" ... />`.
