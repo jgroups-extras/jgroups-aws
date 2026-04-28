@@ -31,7 +31,7 @@
         <!-- https://mvnrepository.com/artifact/org.jgroups/jgroups -->
         <jgroups.version>5.5.4.Final</jgroups.version>
         <!-- https://mvnrepository.com/artifact/software.amazon.awssdk/bom -->
-        <aws.version>2.42.4</aws.version>
+        <aws.version>2.43.0</aws.version>
     </properties>
 
     <developers>
