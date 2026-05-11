@@ -11,6 +11,9 @@ on:
       - main
     paths:
       - "**/pom.xml"
+permissions:
+  contents: read
+
 env:
   # The modules to check for dependencies. If there is more than one they are comma separated
   MODULES_TO_CHECK: /
