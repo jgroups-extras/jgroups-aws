@@ -328,7 +328,7 @@ public class S3_PING extends FILE_PING {
             }
         }
         catch(Exception ex) {
-            log.error(Util.getMessage("FailedDeletingAllObjects"), ex);
+            log.error(String.format("Failed deleting all objects in AWS S3 for cluster '%s'.", clusterPrefix), ex);
         }
     }
 
