@@ -11,7 +11,6 @@ import org.jgroups.logging.LogFactory;
 import org.jgroups.protocols.FILE_PING;
 import org.jgroups.protocols.PingData;
 import org.jgroups.util.Responses;
-import org.jgroups.util.Util;
 import software.amazon.awssdk.auth.credentials.DefaultCredentialsProvider;
 import software.amazon.awssdk.core.ResponseBytes;
 import software.amazon.awssdk.core.sync.RequestBody;
@@ -295,7 +294,7 @@ public class S3_PING extends FILE_PING {
             s3Client.deleteObject(deleteObjectRequest);
         }
         catch(Exception e) {
-            log.error(Util.getMessage("FailureRemovingData"), e);
+            log.error(String.format("Failed removing object '%s' from AWS S3.", key), e);
         }
     }
 
@@ -315,19 +314,17 @@ public class S3_PING extends FILE_PING {
 
             for(final S3Object object : objects.contents()) {
                 if(log.isTraceEnabled())
-                    log.trace("Fetching data for object '%s'.", object.key());
+                    log.trace("Removing object '%s'.", object.key());
                 try {
                     DeleteObjectRequest deleteObjectRequest = DeleteObjectRequest.builder().bucket(bucket_name).key(object.key()).build();
                     s3Client.deleteObject(deleteObjectRequest);
-                    if(log.isTraceEnabled())
-                        log.trace("Removing '%s'.", object.key());
                 }
                 catch(Throwable t) {
-                    log.error("Failed deleting object '%s': %s", object.key(), t);
+                    log.error(String.format("Failed deleting object '%s'.", object.key()), t);
                 }
             }
         }
-        catch(Exception ex) {
+        catch(Throwable ex) {
             log.error(String.format("Failed deleting all objects in AWS S3 for cluster '%s'.", clusterPrefix), ex);
         }
     }
