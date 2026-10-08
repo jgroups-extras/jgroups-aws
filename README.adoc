@@ -143,6 +143,33 @@ Based on default tcp.xml with discovery replaced with aws.S3_PING.
 </config>
 ----
 
+=== AWS SDK Version Policy
+
+The AWS SDK for Java 2.x publishes new patch releases almost daily, which this project does not track with its own releases.
+Instead, the project continuously consumes the latest AWS SDK minor version, and each release is built and tested against the latest version available at the time of release.
+This version is the endorsed version for that release.
+
+Users are encouraged to update the AWS SDK independently to newer versions as needed (e.g. to pick up fixes or address security vulnerabilities) without waiting for a new release of this project.
+To override the AWS SDK version, import the AWS SDK BOM in your project's dependency management:
+
+[source,xml]
+----
+<dependencyManagement>
+    <dependencies>
+        <dependency>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>bom</artifactId>
+            <version>${aws.version}</version>
+            <type>pom</type>
+            <scope>import</scope>
+        </dependency>
+    </dependencies>
+</dependencyManagement>
+----
+
+NOTE: AWS SDK minor version updates can change default behavior, which can affect third-party S3-compatible storage configured via the `endpoint` property.
+When reporting issues, please include the AWS SDK version in use.
+
 == Testing
 
 Running the automated tests requires having AWS credentials setup with appropriate permissions
