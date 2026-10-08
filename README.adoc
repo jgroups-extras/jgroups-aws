@@ -143,6 +143,50 @@ Based on default tcp.xml with discovery replaced with aws.S3_PING.
 </config>
 ----
 
+=== Credentials
+
+The protocol does not provide any properties for configuring AWS credentials.
+Instead, credentials are resolved using the AWS SDK default credentials provider chain, which looks for credentials in the following locations, in order:
+
+. Java system properties (`aws.accessKeyId`, `aws.secretAccessKey` and `aws.sessionToken`)
+. Environment variables (`AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY` and `AWS_SESSION_TOKEN`)
+. Web identity token (e.g. IAM roles for service accounts on Amazon EKS)
+. Shared `credentials` and `config` files (`~/.aws/credentials` and `~/.aws/config`)
+. Amazon ECS container credentials
+. Amazon EC2 instance profile credentials (IAM role attached to the instance)
+
+When running on AWS infrastructure, using IAM roles is recommended over static credentials.
+
+For the full and up-to-date description of the provider chain and all supported options, refer to the official documentation:
+https://docs.aws.amazon.com/sdk-for-java/latest/developer-guide/credentials-chain.html[AWS SDK for Java 2.x – Default credentials provider chain].
+
+=== AWS SDK Version Policy
+
+The AWS SDK for Java 2.x publishes new patch releases almost daily, which this project does not track with its own releases.
+Instead, the project continuously consumes the latest AWS SDK minor version, and each release is built and tested against the latest version available at the time of release.
+This version is the endorsed version for that release.
+
+Users are encouraged to update the AWS SDK independently to newer versions as needed (e.g. to pick up fixes or address security vulnerabilities) without waiting for a new release of this project.
+To override the AWS SDK version, import the AWS SDK BOM in your project's dependency management:
+
+[source,xml]
+----
+<dependencyManagement>
+    <dependencies>
+        <dependency>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>bom</artifactId>
+            <version>${aws.version}</version>
+            <type>pom</type>
+            <scope>import</scope>
+        </dependency>
+    </dependencies>
+</dependencyManagement>
+----
+
+NOTE: AWS SDK minor version updates can change default behavior, which can affect third-party S3-compatible storage configured via the `endpoint` property.
+When reporting issues, please include the AWS SDK version in use.
+
 == Testing
 
 Running the automated tests requires having AWS credentials setup with appropriate permissions
