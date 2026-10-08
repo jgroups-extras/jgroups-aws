@@ -31,7 +31,7 @@
         <!-- https://mvnrepository.com/artifact/org.jgroups/jgroups -->
         <jgroups.version>5.5.7.Final</jgroups.version>
         <!-- https://mvnrepository.com/artifact/software.amazon.awssdk/bom -->
-        <aws.version>2.44.4</aws.version>
+        <aws.version>2.55.11</aws.version>
     </properties>
 
     <developers>
@@ -155,6 +155,17 @@
             <version>2.0.5</version>
             <scope>test</scope>
         </dependency>
+        <!-- Both sync HTTP client implementations are put on the test classpath; each surefire execution selects one -->
+        <dependency>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>apache-client</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>apache5-client</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
@@ -168,6 +179,30 @@
                         <java.util.logging.config.file>src/test/resources/logging.properties</java.util.logging.config.file>
                     </systemPropertyVariables>
                 </configuration>
+                <executions>
+                    <!-- Apache HttpClient 5 (SDK default since 2.46.0) -->
+                    <execution>
+                        <id>default-test</id>
+                        <configuration>
+                            <systemPropertyVariables>
+                                <software.amazon.awssdk.http.service.impl>software.amazon.awssdk.http.apache5.Apache5SdkHttpService</software.amazon.awssdk.http.service.impl>
+                            </systemPropertyVariables>
+                        </configuration>
+                    </execution>
+                    <!-- Apache HttpClient 4 (e.g. as used in WildFly) -->
+                    <execution>
+                        <id>test-apache-client-4</id>
+                        <goals>
+                            <goal>test</goal>
+                        </goals>
+                        <configuration>
+                            <reportsDirectory>${project.build.directory}/surefire-reports-apache-client-4</reportsDirectory>
+                            <systemPropertyVariables>
+                                <software.amazon.awssdk.http.service.impl>software.amazon.awssdk.http.apache.ApacheSdkHttpService</software.amazon.awssdk.http.service.impl>
+                            </systemPropertyVariables>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
