@@ -36,17 +36,22 @@ public abstract class AbstractS3_PINGDiscoveryTestCase {
 
     public static final int CHANNEL_COUNT = 5;
 
-    // The cluster names need to randomized so that multiple test runs can be run in parallel with the same
-    // credentials (e.g. running JDK8 and JDK9 on the CI).
-    public static final String RANDOM_CLUSTER_NAME = UUID.randomUUID().toString();
+    // Upper bound for all channels to converge on the same view
+    private static final long VIEW_TIMEOUT = TimeUnit.SECONDS.toMillis(30);
 
     static boolean areGenuineCredentialsAvailable() {
         return System.getenv("AWS_ACCESS_KEY_ID") != null && System.getenv("AWS_SECRET_ACCESS_KEY") != null;
     }
 
+    // The cluster names need to be randomized so that multiple test runs can be run in parallel with the same
+    // credentials (e.g. the JDK matrix on the CI) and so that individual tests do not interfere with each other.
+    private static String randomClusterName() {
+        return UUID.randomUUID().toString();
+    }
+
     @Test
     public void testDiscovery() throws Exception {
-        discover(RANDOM_CLUSTER_NAME, S3_PING.class.getSimpleName());
+        discover(randomClusterName(), S3_PING.class.getSimpleName());
     }
 
     @Test
@@ -54,48 +59,54 @@ public abstract class AbstractS3_PINGDiscoveryTestCase {
         String bucketPrefixProperty = "jgroups.aws.s3.bucket_prefix";
 
         System.setProperty(bucketPrefixProperty, "my-other-test-prefix");
-        discover(RANDOM_CLUSTER_NAME, S3_PING.class.getSimpleName());
-        System.clearProperty(bucketPrefixProperty);
+        try {
+            discover(randomClusterName(), S3_PING.class.getSimpleName());
+        } finally {
+            System.clearProperty(bucketPrefixProperty);
+        }
     }
 
     @Test
     public void testDiscoveryObscureClusterName() throws Exception {
         String obscureClusterName = "``\\//--+ěščřžýáíé==''!@#$%^&*()_{}<>?";
-        discover(obscureClusterName + RANDOM_CLUSTER_NAME, S3_PING.class.getSimpleName());
+        discover(obscureClusterName + randomClusterName(), S3_PING.class.getSimpleName());
     }
 
     private void discover(String clusterName, String stackName) throws Exception {
-        List<JChannel> channels = create(clusterName, stackName);
+        List<JChannel> channels = new LinkedList<>();
+        try {
+            create(channels, clusterName, stackName);
 
-        Thread.sleep(TimeUnit.SECONDS.toMillis(2));
+            try {
+                Util.waitUntilAllChannelsHaveSameView(VIEW_TIMEOUT, 100, channels);
+            } finally {
+                printViews(channels);
+            }
 
-        printViews(channels);
-
-        // Asserts the views are there
-        for (JChannel channel : channels) {
-            assertEquals(CHANNEL_COUNT, channel.getView().getMembers().size(), "member count");
-        }
-
-        // Stop all channels
-        // n.b. all channels must be closed, only disconnecting all concurrently can leave stale data
-        for (JChannel channel : channels) {
-            channel.close();
+            // Asserts the views are there
+            for (JChannel channel : channels) {
+                assertEquals(CHANNEL_COUNT, channel.getView().getMembers().size(), "member count");
+            }
+        } finally {
+            // Stop all channels, even on failure, so that leftover members cannot leak into subsequent tests
+            // n.b. all channels must be closed, only disconnecting all concurrently can leave stale data
+            for (JChannel channel : channels) {
+                channel.close();
+            }
         }
     }
 
-    private List<JChannel> create(String clusterName, String stackName) throws Exception {
-        List<JChannel> result = new LinkedList<>();
+    private void create(List<JChannel> channels, String clusterName, String stackName) throws Exception {
         for (int i = 0; i < CHANNEL_COUNT; i++) {
             JChannel channel = new JChannel("org/jgroups/protocols/aws/tcp-" + stackName + ".xml");
+            channels.add(channel);
 
             channel.connect(clusterName);
             if (i == 0) {
                 // Let's be clear about the coordinator
                 Util.sleep(1000);
             }
-            result.add(channel);
         }
-        return result;
     }
 
     protected static void printViews(List<JChannel> channels) {
